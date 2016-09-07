@@ -1,0 +1,6 @@
+name: sentialabs.com
+highlighter: rouge
+exclude: [ Gemfile, Gemfile.lock, README.md ]
+
+gems:
+  - jekyll-gist
