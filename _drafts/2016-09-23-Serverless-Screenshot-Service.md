@@ -37,24 +37,34 @@ You can find all the source code for this project in this [repository](https://g
 
 Getting Started
 ===============
-This is my first project in NodeJS, so bare with me (I'm more of a Python guy), any tips or PR's are greatly appreciated :)
+This is my first project in NodeJS, so bare with me (I'm more of a Python guy), any tips or PR's are greatly appreciated 😄
 
-When you download the project, you can just run a `npm install`, to get all the requirements installed, and get going. If you want to follow along from scratch, read on.
+When you download the project, you can just run a `npm install`, to get all the requirements installed, and get going. If you want to follow along from scratch, read on. Be sure to install the latest serverless version (`npm install -g serverless`).
 
+
+Overview
+--------
 For this project, we're going to setup:
- * One Lambda function, triggered by a POST event
- * One Lambda function, triggered by a GET event
- * One Lambda function, triggered by an S3 CreateObject event
+
+ * One Lambda function, triggered by a `POST` event
+ * One Lambda function, triggered by a `GET` event
+ * One Lambda function, triggered by an S3 `CreateObject` event
  * Extra IAM Role access for the screenshot bucket
  * An S3 bucket for the screenshots
- * A CloudFront distribution
+ * A CloudFront distribution for serving the screenshots
 
-Be sure to install the latest serverless version (`npm install -g serverless`). We start the project by creating a new project (in the current directory): `serverless create --template aws-nodejs`.
+Let's get started
+-----------------
+We start the project by creating a new project (in the current directory):
+
+```bash
+serverless create --template aws-nodejs
+```
 
 We now have a directory with a couple of files:
 
 ```bash
-$ ls -l
+ls -l
 total 32
 -rw-r--r--  1 svdgraaf  staff    54 Sep  6 19:44 README.md
 -rw-r--r--  1 svdgraaf  staff    63 Sep  6 19:48 event.json
@@ -62,9 +72,9 @@ total 32
 -rw-r--r--  1 svdgraaf  staff  1754 Sep  6 19:48 serverless.yml
 ```
 
-The `handler.js` file will contain our functions, and with `event.json` we can simulate our calls. I later moved this to an `events` directory, so I could simulate multiple events.
+The `handler.js` file will contain our functions, and with `event.json` we can simulate our calls. I later moved this to an `events` directory, so I could simulate multiple events for the other calls.
 
-Let's first edit the `serverless.yml`, which will contain the configuration for our Service.
+Let's first take a look at the `serverless.yml` file, which contains the configuration for our Service.
 
 Provider configuration
 ----------------------
