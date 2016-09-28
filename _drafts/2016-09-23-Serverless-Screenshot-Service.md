@@ -39,7 +39,7 @@ Getting Started
 ===============
 This is my first project in NodeJS, so bare with me (I'm more of a Python guy), any tips or PR's are greatly appreciated 😄
 
-When you download the project, you can just run a `npm install`, to get all the requirements installed, and get going. If you want to follow along from scratch, read on. Be sure to install the latest serverless version (`npm install -g serverless`).
+When you download the project, you can just run a `npm install`, to get all the requirements installed, and get going. If you want to follow along from scratch, read on. Be sure to install the latest Serverless version (`npm install -g serverless`).
 
 
 Overview
@@ -78,7 +78,7 @@ Let's first take a look at the `serverless.yml` file, which contains the configu
 
 Provider configuration
 ----------------------
-First, we need to setup our provider configuration, in this case, we'll use `aws`, with `nodejs4.3`.
+First, we need to setup our provider configuration, in this case, we'll use `aws`, with `nodejs4.3`. We also add an api key, so we can securely use our api, and add some iam rules to allow the functions to list and upload to the S3 bucket.
 
 ```yaml
 provider:
@@ -103,22 +103,22 @@ provider:
 
 Functions
 ---------
-We need to create two functions. One for taking a screenshot (called, you guessed it `takeScreenshot`), one for creating a thumbnail of the screenshots, called `createThumbnails`, and one for listing the available screenshot sizes, called `listScreenshots`.
+We need to create two functions. One for taking a screenshot (called, you guessed it: `takeScreenshot`), one for creating a thumbnail of the screenshots (`createThumbnails`), and one for listing the available screenshot sizes (`listScreenshots`).
 
 
 ```yaml
 functions:
   takeScreenshot:
-    # you could put the functions in seperate files, just change the 'handler' here.
     handler: handler.take_screenshot
     timeout: 15  # our screenshots can take a while sometimes
     events:
       - http:
           path: screenshots
           method: post
-          # Marking the function as private will require an api-key
+          # Marking the function as private will require a valid api-key
           private: true
           request:
+            # we want to mark the url param as required
             parameters:
               querystrings:
                 url: true
@@ -139,9 +139,8 @@ functions:
   createThumbnails:
     handler: handler.create_thumbnails
     events:
-      # this event type will also create the mentioned bucket
-      # and trigger the lambda function every time a file
-      # is uploaded (ObjectCreated)
+      # this event type will also create the screenshots bucket and trigger
+      # the lambda function every time a file is uploaded (ObjectCreated)
       - s3:
           bucket: ${self:custom.bucket_name}
           event: s3:ObjectCreated:*
@@ -149,8 +148,7 @@ functions:
 
 Custom Resources
 ----------------
-We also need a CloudFront distribution, which is not something that is supported by Serverless out of the box, so we need to create a custom resource.
-We also define some `Output`'s, so we can use these later on.
+We also need a CloudFront distribution to serve our screenshots. This is not supported by Serverless out of the box, so we need to create a custom resource for it. We also define some `Output`'s, so we can use these later on.
 
 ```yaml
 resources:
@@ -186,7 +184,7 @@ resources:
 
 Plugin variables
 ----------------
-We use the [stage-variables](https://www.npmjs.com/package/serverless-plugin-stage-variables) plugin, so we can set stage variables in ApiGateway, which we can use in our Lambda functions. You can set those in the `custom` part:
+We use the [stage-variables](https://www.npmjs.com/package/serverless-plugin-stage-variables) plugin, so we can set stage variables in ApiGateway, which we can then use in our Lambda functions. You can set those in the `custom` section. This also allows us to use CloudFormation references inside our Lambda functions. CloudFormation will fill in the values with the actual output for us.
 
 ```yaml
 custom:
@@ -202,28 +200,29 @@ custom:
 
 Defining functions
 ==================
-In the `handler.js` file, you can define your functions, in our case, it will hold three: `take_screenshot`, `list_screenshots` and `create_thumbnails`. You can use the `handler` definition in `serverless.yml` to optionally use different files if you need to.
-The functions will always receive three variables: `event`, `context` and `cb`. The `event` will contain the event which triggered the Lambda (in our case, either an api gateway call, or the S3 bucket event). The `context` variable will contain the Lambda context you can use to figure out how much memory you have and such. The `cb` is a callback function you can use to signal for errors or success.
+In the `handler.js` file, you should define your functions. In our case, it will hold three functions: `take_screenshot`, `list_screenshots` and `create_thumbnails`. You can use the `handler` definition in in the `functions` section of `serverless.yml` to optionally use different files if you want to separate them.
+The functions will always receive three variables: `event`, `context` and `cb`. The `event` will contain the event which triggered the Lambda (in our case, either an ApiGateway call, or the S3 bucket event). The `context` variable will contain the Lambda context you can use to figure out how much memory you have, the platform, etc. The `cb` (callback) you can use to signal for errors or success.
 
 Event variables
 ---------------
-Depending from which service you receive an event, you will receive different events. In the case of our Api Gateway events, we get a lot of stuff, headers, query parameters, stage variables, etc.
+Depending from which service you receive an event, you will receive different events. In the case of our Api Gateway events, we get a lot of stuff, headers, query parameters, stage variables, etc. In our case, we're only using `event.query` and `event.stageVariables`, but there is also `event.headers`, `event.body`, etc. The mapping to the event is defined by Serverless, and the default mapping (and fields) can be seen in the [repository](https://github.com/serverless/serverless/blob/master/lib/plugins/aws/deploy/compile/events/apiGateway/lib/methods.js#L98).
 
 Extra binaries
 --------------
-In this project, we will need some extra binaries (phantomjs), which will perform the actual taking of the screenshot. We also use ImageMagick, but that is provided by AWS by default, so we don't package that seperately.
+For this project, we will need some extra binaries ([PhantomJS](http://phantomjs.org/) in particular), which take the screenshots. We also use [ImageMagick](http://www.imagemagick.org/script/index.php), but that is provided by AWS by default in the Lambda image, so we don't package that separately.
+Serverless will package any extra files in the project directory automatically. So adding extra binaries is as simple as just creating a directory, and adding the files.
 
-Serverless will package any extra files in the project directory automatically. So adding extra binaries is as simple as just creating a directory, and adding the files. If you need (compiled) binaries, you can use the Amazon Lambda AMI, and compile your binaries: http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html The [project repository](https://github.com/svdgraaf/serverless-screenshot) already contains the binaries you can use.
+If you need (compiled) binaries, you can use the Amazon Lambda AMI, and compile [your own binaries](http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html). The [project repository](https://github.com/svdgraaf/serverless-screenshot) already contains the binaries you can use. You can also use this [docker container](https://hub.docker.com/r/lambci/lambda/) to compile binaries in.
 
 Deploying
 =========
-Now that we have everything in place, we can deploy the application, it's wise to use different deploy environment, so let's start with a `dev` environment: `sls deploy -s dev`. This will zip everything together (including the binaries), create a deployment bucket, upload the zipfile, and update the cloudformation template with all the resources that we need.
+Now that we have everything in place, we can deploy the application. It's a good idea to use different deploy environments, so let's start with a `dev` environment: `sls deploy -s dev`. This will zip everything together (including the binaries), create a deployment bucket, upload the zipfile, and update the cloudformation template with all the resources that we need.
 
 ```python
 sls deploy -s dev --verbose
 ```
 
-(the `--verbose` will show you all the CloudFormation output, very nice!).
+(the `--verbose` will show you all the CloudFormation output during deployment, very nice!).
 
 After the deployment is done, you will see the end results:
 
@@ -241,7 +240,11 @@ functions:
   lambda-screenshots-dev-takeScreenshot: arn:aws:lambda:us-east-1:123123123123:function:lambda-screenshots-dev-takeScreenshot
 ```
 
-Great! Now we can test our functions. You can use your favorite http client like `curl` or `postman`, etc.
+![Awesome](http://i.giphy.com/5GoVLqeAOo6PK.gif)
+
+**Great**, everything is up and running!
+
+Now we can test our functions. You can use your favorite http client like `curl` or `postman`, etc.
 
 You can find your apikey's in the AWS ApiGateway console. You need to set the `x-api-key` header with the api key for every request.
 
@@ -250,7 +253,7 @@ Creating a screenshot
 So to create a screenshot for `google.com`:
 
 ```bash
-$ curl -X POST https://5vgg1jc802.execute-api.us-east-1.amazonaws.com/dev/screenshots?url=http://google.com/ -H "x-api-key: 123123Qqws6SFh1t123123vsXpo5VfFI5MNJf123"
+$ curl -X POST https://123g1jc802.execute-api.us-east-1.amazonaws.com/dev/screenshots?url=http://google.com/ -H "x-api-key: 123123Qqws6SFh1t123123vsXpo5VfFI5MNJf123"
 {
 	"hash": "6ab016b2dad7ba49a992ba0213a91cf8",
 	"key": "6ab016b2dad7ba49a992ba0213a91cf8/original.png",
@@ -264,7 +267,7 @@ Listing all screenshot sizes
 And to get all the different available sizes for `google.com`:
 
 ```bash
-$ curl -X GET https://5vgg1jc802.execute-api.us-east-1.amazonaws.com/dev/screenshots?url=http://google.com/ -H "x-api-key: 123123Qqws6SFh1t123123vsXpo5VfFI5MNJf123"
+$ curl -X GET https://123g1jc802.execute-api.us-east-1.amazonaws.com/dev/screenshots?url=http://google.com/ -H "x-api-key: 123123Qqws6SFh1t123123vsXpo5VfFI5MNJf123"
 {
 	"100": "https://foobar.cloudfront.net/6ab016b2dad7ba49a992ba0213a91cf8/100.png",
 	"200": "https://foobar.cloudfront.net/6ab016b2dad7ba49a992ba0213a91cf8/200.png",
