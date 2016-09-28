@@ -6,7 +6,7 @@ email: sander.van.de.graaf@sentia.com
 ---
 
 Recently a client requested a feature which involved screenshots of random urls. Now, there are several services out there which will do this for you.
-Most of these services have interesting rest api's and pricing models. I really wanted to develop something with Serverless, and took this as an opportunity to check things out. This will run on the Amazon services (eg: Lambda).
+Most of these services have interesting rest api's and pricing models. I really wanted to develop something with [Serverless](https://serverless.com/), and took this as an opportunity to check things out. This will run on the Amazon services (eg: Lambda).
 
 You can find all the source code mentioned in [this repository](https://github.com/svdgraaf/serverless-screenshot).
 
@@ -18,33 +18,24 @@ If you just want to launch the service yourself, you can use this magic button w
 
 Overview
 --------
-We're going to create a service to which we can `POST` a url, it will capture and store a screenshot of the given url for us, and return a url where we can download the screenshot.
-Also, we want to have different thumbnail sizes of every screenshot, and we want to be able to list all the available thumbnail sizes of a url.
+We're going to create a service to which we can `POST` a url, it will capture and store a screenshot of the given url for us, and return a url where we can download the screenshot. Also, we want to have different thumbnail sizes of every screenshot, and we want to be able to list all the available thumbnail sizes of a url.
 
-The architecture of what we're going to build, looks something like this:
+The architecture of what we're going to build, looks like this:
 
 ![Lambda Screenshot Architecture](https://github.com/svdgraaf/serverless-screenshot/raw/master/docs/architecture.png)
+*Architecture for this project*
 
 The app posts to Api Gateway, which will trigger a Lambda function, which will take the screenshot, and upload it to the bucket. It will then return the url for the created screenshot.
 
 When the file gets uploads (putObject) to the S3 bucket, it will trigger the `Create Thumbnails` function, which will take the screenshot as input, and use ImageMagick to create several thumbnail versions of the given image, and upload those to the same bucket as well.
 
-Lastly, there will be a function which the app can call, to get a list of all available thumbnail sizes.
-
-The App can use the returned urls to present them to the enduser, and their browser will download it through CloudFront from S3.
+Lastly, there will be a function which the app can call, to get a list of all available thumbnail sizes. The App can use the returned urls to present them to the enduser, and their browser will download it through CloudFront from S3.
 
 You can find all the source code for this project in this [repository](https://github.com/svdgraaf/serverless-screenshot).
 
-Getting Started
-===============
-This is my first project in NodeJS, so bare with me (I'm more of a Python guy), any tips or PR's are greatly appreciated 😄
-
-When you download the project, you can just run a `npm install`, to get all the requirements installed, and get going. If you want to follow along from scratch, read on. Be sure to install the latest Serverless version (`npm install -g serverless`).
-
-
-Overview
---------
-For this project, we're going to setup:
+List of resources
+-----------------
+For this project, we're going to need to setup:
 
  * One Lambda function, triggered by a `POST` event
  * One Lambda function, triggered by a `GET` event
@@ -52,6 +43,13 @@ For this project, we're going to setup:
  * Extra IAM Role access for the screenshot bucket
  * An S3 bucket for the screenshots
  * A CloudFront distribution for serving the screenshots
+
+
+Getting Started
+===============
+This is my first project in NodeJS, so bare with me (I'm more of a Python guy), any tips or PR's are greatly appreciated 😄
+
+When you download the project, you can just run a `npm install`, to get all the requirements installed, and get going. If you want to follow along from scratch, read on. Be sure to install the latest Serverless version (`npm install -g serverless`).
 
 Let's get started
 -----------------
@@ -200,7 +198,7 @@ custom:
 
 Defining functions
 ==================
-In the `handler.js` file, you should define your functions. In our case, it will hold three functions: `take_screenshot`, `list_screenshots` and `create_thumbnails`. You can use the `handler` definition in in the `functions` section of `serverless.yml` to optionally use different files if you want to separate them.
+In the `handler.js` file, you should define your functions. In our case, it will hold three functions: `take_screenshot`, `list_screenshots` and `create_thumbnails`. You can use the `handler` definition in in the `functions` section of `serverless.yml` to optionally use different files if you want to separate them. You can see the actual implementations of the functions in the [repository](https://github.com/svdgraaf/serverless-screenshot/blob/master/handler.js).
 The functions will always receive three variables: `event`, `context` and `cb`. The `event` will contain the event which triggered the Lambda (in our case, either an ApiGateway call, or the S3 bucket event). The `context` variable will contain the Lambda context you can use to figure out how much memory you have, the platform, etc. The `cb` (callback) you can use to signal for errors or success.
 
 Event variables
@@ -239,21 +237,22 @@ functions:
   lambda-screenshots-dev-createThumbnails: arn:aws:lambda:us-east-1:123123123123:function:lambda-screenshots-dev-createThumbnails
   lambda-screenshots-dev-takeScreenshot: arn:aws:lambda:us-east-1:123123123123:function:lambda-screenshots-dev-takeScreenshot
 ```
+**Awesome**, everything is up and running! 🎉
 
-![Awesome](http://i.giphy.com/5GoVLqeAOo6PK.gif)
+![Awesome](http://i.giphy.com/yidUzHnBk32Um9aMMw.gif){: .image-max .img-rounded }
 
-**Great**, everything is up and running!
+Using the Service
+=================
 
-Now we can test our functions. You can use your favorite http client like `curl` or `postman`, etc.
-
-You can find your apikey's in the AWS ApiGateway console. You need to set the `x-api-key` header with the api key for every request.
+Now that everything is deployed, we can test our service. You can use your favorite http client like `curl` or `postman` for this.
+As we configured our api's to use api keys, you need to provide a valid api key with each request, just add a head `x-api-key` with each request, and it should work. You can grab the api keys from the Api Gateway console, or from the Serverless output with `sls info`.
 
 Creating a screenshot
 ---------------------
-So to create a screenshot for `google.com`:
+To create a screenshot for `google.com`:
 
 ```bash
-$ curl -X POST https://123g1jc802.execute-api.us-east-1.amazonaws.com/dev/screenshots?url=http://google.com/ -H "x-api-key: 123123Qqws6SFh1t123123vsXpo5VfFI5MNJf123"
+$ curl -X POST https://123g1jc802.execute-api.us-east-1.amazonaws.com/dev/screenshots?url=http://google.com/ -H "x-api-key: [yourkey]"
 {
 	"hash": "6ab016b2dad7ba49a992ba0213a91cf8",
 	"key": "6ab016b2dad7ba49a992ba0213a91cf8/original.png",
@@ -264,10 +263,10 @@ $ curl -X POST https://123g1jc802.execute-api.us-east-1.amazonaws.com/dev/screen
 
 Listing all screenshot sizes
 ----------------------------
-And to get all the different available sizes for `google.com`:
+To get all the different available sizes for `google.com`:
 
 ```bash
-$ curl -X GET https://123g1jc802.execute-api.us-east-1.amazonaws.com/dev/screenshots?url=http://google.com/ -H "x-api-key: 123123Qqws6SFh1t123123vsXpo5VfFI5MNJf123"
+$ curl -X GET https://123g1jc802.execute-api.us-east-1.amazonaws.com/dev/screenshots?url=http://google.com/ -H "x-api-key: [yourkey]"
 {
 	"100": "https://foobar.cloudfront.net/6ab016b2dad7ba49a992ba0213a91cf8/100.png",
 	"200": "https://foobar.cloudfront.net/6ab016b2dad7ba49a992ba0213a91cf8/200.png",
@@ -288,10 +287,17 @@ Pricing
 =======
 So what will this cost you? If every call would take around 10 seconds (which is a safe bet, usually they are way faster). You could make 250.000 calls per month in the free tier, which wouldn't cost you a thing.
 
-So creating 100.000 screenshots **per month**, with 15 thumbnails per screenshot would be absolutely free.
+So creating at least 100.000 screenshots **per month**, with 15 thumbnails per screenshot would be absolutely free.
+
+![yay](http://i.giphy.com/TLayDh2IZOHPW.gif){: .image-max .img-rounded }
 
 Conclusion
 ==========
-Taking screenshots is something which is perfectly fine to do with Lambda. There is no need to setup queuing, batch workers, etc. Lambda can do the screenshotting, thumbnailing and storage. Whenever a request comes in, it will automatically spin up, solving autoscaling out of the box for you. Awesome!
+Taking screenshots is something which is perfectly fine to do with Lambda. There is no need to setup queuing, batch workers, etc. Lambda can handle the screenshotting, thumbnailing and storage. Whenever a request comes in, it will automatically spin up, autoscaling to whatever is your need.
+Serverless makes it really easy to setup, configure and deploy your (micro)services, and now that it's using CloudFormation, it's really easy to extend your services with other AWS services you might need in your project.
 
 [![Launch Awesomeness](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=serverless-screenshot-service&templateURL=https://s3-eu-west-1.amazonaws.com/serverless-screenshots-service/2016-09-23T12%3A50%3A03/template.yml)
+
+^^ Try it!
+
+^D

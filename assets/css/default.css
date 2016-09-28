@@ -30,3 +30,31 @@ a {
   color: black;
   font-weight: bold;
 }
+
+.image-max {
+  width: 100%;
+}
+
+.image-center {
+  margin: 0 auto;
+  display: block;
+}
+
+#post h1 {
+  border-bottom: 1px solid #eee
+}
+
+#post h2 {
+  font-size: 20px;
+}
+
+img + em {
+  text-align: center;
+  display: block;
+  font-style: normal;
+}
+
+#post pre {
+  background-color: black;
+  color: white;
+}
