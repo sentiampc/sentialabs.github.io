@@ -10,8 +10,8 @@ Most of these services have interesting rest api's and pricing models. I really 
 
 You can find all the source code mentioned in [this repository](https://github.com/svdgraaf/serverless-screenshot).
 
-Quick installation
-==================
+Quick installation 🚀
+====================
 If you just want to launch the service yourself, you can use this magic button which will setup everything for you in your AWS account through the magic of CloudFormation:
 
 [![Launch Awesomeness](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=serverless-screenshot-service&templateURL=https://s3-eu-west-1.amazonaws.com/serverless-screenshots-service/2016-09-23T12%3A50%3A03/template.yml)
@@ -29,7 +29,7 @@ The app posts to Api Gateway, which will trigger a Lambda function, which will t
 
 When the file gets uploads (putObject) to the S3 bucket, it will trigger the `Create Thumbnails` function, which will take the screenshot as input, and use ImageMagick to create several thumbnail versions of the given image, and upload those to the same bucket as well.
 
-Lastly, there will be a function which the app can call, to get a list of all available thumbnail sizes. The App can use the returned urls to present them to the enduser, and their browser will download it through CloudFront from S3.
+Lastly, there will be a function which the app can call, to get a list of all available thumbnail sizes. The App can use the returned urls to present them to the end user, and their browser will download it through CloudFront from S3.
 
 You can find all the source code for this project in this [repository](https://github.com/svdgraaf/serverless-screenshot).
 
@@ -47,12 +47,10 @@ For this project, we're going to need to setup:
 
 Getting Started
 ===============
-This is my first project in NodeJS, so bare with me (I'm more of a Python guy), any tips or PR's are greatly appreciated 😄
+This is my first project in NodeJS, so bear with me (I'm more of a Python guy), any tips or PR's are greatly appreciated 😄
 
 When you download the project, you can just run a `npm install`, to get all the requirements installed, and get going. If you want to follow along from scratch, read on. Be sure to install the latest Serverless version (`npm install -g serverless`).
 
-Let's get started
------------------
 We start the project by creating a new project (in the current directory):
 
 ```bash
@@ -182,7 +180,7 @@ resources:
 
 Plugin variables
 ----------------
-We use the [stage-variables](https://www.npmjs.com/package/serverless-plugin-stage-variables) plugin, so we can set stage variables in ApiGateway, which we can then use in our Lambda functions. You can set those in the `custom` section. This also allows us to use CloudFormation references inside our Lambda functions. CloudFormation will fill in the values with the actual output for us.
+We use the [stage-variables](https://www.npmjs.com/package/serverless-plugin-stage-variables) plugin, so we can set stage variables in ApiGateway, which we can then use in our Lambda functions. You can configure them in the `custom` section. This also allows us to use CloudFormation references inside our Lambda functions. CloudFormation will fill in the values with the actual output for us.
 
 ```yaml
 custom:
@@ -198,8 +196,8 @@ custom:
 
 Defining functions
 ==================
-In the `handler.js` file, you should define your functions. In our case, it will hold three functions: `take_screenshot`, `list_screenshots` and `create_thumbnails`. You can use the `handler` definition in in the `functions` section of `serverless.yml` to optionally use different files if you want to separate them. You can see the actual implementations of the functions in the [repository](https://github.com/svdgraaf/serverless-screenshot/blob/master/handler.js).
-The functions will always receive three variables: `event`, `context` and `cb`. The `event` will contain the event which triggered the Lambda (in our case, either an ApiGateway call, or the S3 bucket event). The `context` variable will contain the Lambda context you can use to figure out how much memory you have, the platform, etc. The `cb` (callback) you can use to signal for errors or success.
+In the `handler.js` file, you should define your functions. In our case, it will hold three functions: `take_screenshot`, `list_screenshots` and `create_thumbnails`. You can use the `handler` definition in in the `functions` section of `serverless.yml` to optionally use different files if you want to separate them. The actual implementations of the functions are in the [repository](https://github.com/svdgraaf/serverless-screenshot/blob/master/handler.js).
+The functions will always receive three variables: `event`, `context` and `cb`. The `event` will contain the event which triggered the Lambda (in our case, either an ApiGateway call, or the S3 bucket event). The `context` variable contains the Lambda context to find out how much memory you have, the platform, etc. The `cb` (callback) can be used to signal for error or success.
 
 Event variables
 ---------------
@@ -210,13 +208,13 @@ Extra binaries
 For this project, we will need some extra binaries ([PhantomJS](http://phantomjs.org/) in particular), which take the screenshots. We also use [ImageMagick](http://www.imagemagick.org/script/index.php), but that is provided by AWS by default in the Lambda image, so we don't package that separately.
 Serverless will package any extra files in the project directory automatically. So adding extra binaries is as simple as just creating a directory, and adding the files.
 
-If you need (compiled) binaries, you can use the Amazon Lambda AMI, and compile [your own binaries](http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html). The [project repository](https://github.com/svdgraaf/serverless-screenshot) already contains the binaries you can use. You can also use this [docker container](https://hub.docker.com/r/lambci/lambda/) to compile binaries in.
+If you need (compiled) binaries, you can use the Amazon Lambda AMI to spin up an EC2 instance (or use this easy [docker container](https://hub.docker.com/r/lambci/lambda/)), compile [your own binaries](http://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html), and copy them over to your project. The [project repository](https://github.com/svdgraaf/serverless-screenshot) already contains the binaries you can use.
 
 Deploying
 =========
-Now that we have everything in place, we can deploy the application. It's a good idea to use different deploy environments, so let's start with a `dev` environment: `sls deploy -s dev`. This will zip everything together (including the binaries), create a deployment bucket, upload the zipfile, and update the cloudformation template with all the resources that we need.
+Now that we have everything in place, we can deploy the application. It's a good idea to use different deploy environments, so let's start with a `dev` environment: `sls deploy -s dev`. This will zip everything together (including the binaries), create a deployment bucket, upload the zip file, and update the cloudformation template with all the resources that we need.
 
-```python
+```bash
 sls deploy -s dev --verbose
 ```
 
@@ -224,7 +222,7 @@ sls deploy -s dev --verbose
 
 After the deployment is done, you will see the end results:
 
-```
+```yaml
 Service Information
 service: lambda-screenshots
 stage: dev
@@ -293,11 +291,11 @@ So creating at least 100.000 screenshots **per month**, with 15 thumbnails per s
 
 Conclusion
 ==========
-Taking screenshots is something which is perfectly fine to do with Lambda. There is no need to setup queuing, batch workers, etc. Lambda can handle the screenshotting, thumbnailing and storage. Whenever a request comes in, it will automatically spin up, autoscaling to whatever is your need.
+Taking screenshots is something which is perfectly fine to do with Lambda. There is no need to setup queuing, batch workers, etc. Lambda can handle the screenshots, thumbnails and storage. Whenever a request comes in, it will automatically spin up, auto scaling to whatever is your need.
 Serverless makes it really easy to setup, configure and deploy your (micro)services, and now that it's using CloudFormation, it's really easy to extend your services with other AWS services you might need in your project.
 
 [![Launch Awesomeness](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=serverless-screenshot-service&templateURL=https://s3-eu-west-1.amazonaws.com/serverless-screenshots-service/2016-09-23T12%3A50%3A03/template.yml)
 
-^^ Try it!
+^^ Give it a try!
 
 ^D
