@@ -1,11 +1,15 @@
 ---
 layout: default
 title: Contact
+navigation_weight: 2
+navigation_side: right
 ---
 
 # Contact SENTIA Labs
 
-## IRC
-Meet us on IRC in #sentialabs at [freenode](https://freenode.net/).
+## Slack
+<iframe src="https://mysterious-stream-73078.herokuapp.com" style="border:0; width:100%; height:500px;"></iframe>
 
-<iframe src="https://kiwiirc.com/client/chat.freenode.org/?#sentialabs" style="border:0; width:100%; height:450px;"></iframe>
+## Office
+Find our office addresses and phone numbers on our
+[corporate website](https://sentia.com/).

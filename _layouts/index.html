@@ -1,56 +1,32 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>{{ page.title }} | Sentialabs</title>
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/assets/css/default.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  </head>
+{% include header.html %}
 
-  <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">
-            <img src="https://sentia.com/static/svg/logo.svg" height="60" />
-          </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <!-- navigation -->
-          {% include navigation.html %}
-        </div><!--/.navbar-collapse -->
-      </div>
-    </nav>
+<div class="jumbotron">
+  <div class="container">
+    {{content}}
+  </div>
+</div>
 
-    <div id="wrapper" class="container">
-      <div class="row">
-        <div class="col-md-12">
-          {{content}}
+<div id="wrapper" class="container">
+  <div class="row">
+    {% for post in site.posts %}
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+        <div class="thumbnail">
+          {% if post.banner %}
+          <img src="{{post.banner}}" />
+          {% endif %}
+          <div class="caption">
+        <h2><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h2>
+        <p>
+          {{ post.excerpt }}
+        </p>
+        <p>
+        <a class="btn btn-default" href="{{ site.baseurl }}{{ post.url }}" role="button">Read more »</a>
+        </p>
+        </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h1>Posts</h1>
-          <ul id="posts" class="list-group">
-            {% for post in site.posts %}
-            <li class="list-group-item">
-              <a href="{{ post.url }}">{{ post.title }}</a>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-    </div>
-    {% include footer.html %}
-  </body>
-</html>
+    {% endfor %}
+  </div>
+</div>
+
+{% include footer.html %}

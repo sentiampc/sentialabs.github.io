@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Serverless Screenshot service with Lambda
+banner: https://github.com/svdgraaf/serverless-screenshot/raw/master/docs/architecture.png
 author: Sander van de Graaf
 email: sander.van.de.graaf@sentia.com
 ---

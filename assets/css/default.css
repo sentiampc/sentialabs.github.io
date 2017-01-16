@@ -1,8 +1,15 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 body {
   margin: 0;
   margin-top: 90px;
-}
 
+  /* Set the fixed height of the footer here, and with .footer */
+  margin-bottom: 100px;
+}
 
 #wrapper {
 }
@@ -11,24 +18,47 @@ body {
   max-width: 100%
 }
 
-.navbar {
+nav.navbar-fixed-top {
   min-height: 92px;
-  border-bottom: 6px solid #ff0
+  border-bottom: 6px solid #ff0;
+}
+
+#navbar > .nav > li {
+  padding-top: 36px;
+}
+
+#navbar.collapsing,
+#navbar.in {
+  padding-top: 30px;
+}
+
+#navbar.collapsing > .nav > li,
+#navbar.in > .nav > li {
+  padding-top: 0;
 }
 
 .footer {
-  margin-top: 60px;
+  position: absolute;
+  bottom: 0;
   width: 100%;
-  line-height: 60px;
-  /* Set the fixed height of the footer here */
-  height: 70px;
-  background-color: #f5f5f5;
   border-top: 1px solid #f0f0f0;
+  background-color: #f5f5f5;
+
+  /* Set the fixed height of the footer here, and with body */
+  height: 70px;
+  line-height: 60px;
 }
 
-a {
+/*a {
   color: black;
   font-weight: bold;
+}*/
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a,
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
+  color: inherit;
+  text-decoration: inherit;
+  font-weight: inherit;
 }
 
 .image-max {
@@ -38,6 +68,10 @@ a {
 .image-center {
   margin: 0 auto;
   display: block;
+}
+
+.image-border {
+  border: 1px solid #ddd;
 }
 
 #post h1 {
@@ -57,4 +91,60 @@ img + em {
 #post pre {
   background-color: black;
   color: white;
+}
+
+#post table {
+    text-align: left;
+    width: 100%;
+    overflow: hidden;
+    font-size: 110%;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    /*-webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;*/
+}
+#post table td,
+#post table th {
+    padding: 5px 10px;
+}
+#post table thead th {
+    background-color: #53524A;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+#post table tbody td {
+    background: #DBDBDB;
+}
+#post table tfoot td {
+    background: #A2A19F;
+}
+#post table strong {
+  text-transform: uppercase;
+}
+#post table thead th,
+#post table tbody td,
+#post table tfoot td {
+    border-left: 4px solid #FFFFFF;
+}
+#post table tbody tr:first-child td,
+#post table tfoot tr:first-child td {
+    border-top: 4px solid #FFFFFF;
+}
+#post table thead th:first-child {
+    border-left: none;
+}
+#post table tbody td:first-child,
+#post table tfoot td:first-child {
+    border-left: none;
+}
+#post .feature-last-column table th:last-child {
+  background-color: #FFB620;
+}
+#post .feature-last-column table td:last-child {
+  background-color: #FFEBD8;
+}
+#post .feature-last-column table tfoot tr:last-child td:last-child {
+  background-color: #FFD098;
 }
