@@ -1,7 +1,9 @@
-<ul class="nav navbar-nav">
-</ul>
-
 <ul class="nav navbar-nav navbar-right">
-  <li><a href="contact.html">Contact</a></li>
   <li><a href="https://www.sentia.nl/about-sentia/career/">We're Hiring</a></li>
 </ul>
+
+{% assign navigation_left  = site.html_pages |where_exp: 'i','i.navigation_side != "right"' %}
+{% assign navigation_right = site.html_pages |where: 'navigation_side','right' %}
+{% include nav.html pages=navigation_left %}
+{% include nav.html pages=navigation_right class="navbar-right" %}
+

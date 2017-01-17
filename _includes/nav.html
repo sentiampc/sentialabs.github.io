@@ -1,0 +1,43 @@
+{% assign pages = include.pages | where_exp: "i", "i.navigation_weight" |sort: 'navigation_weight' %}
+{% assign current_section = nil %}
+
+<ul class="nav navbar-nav {{ include.class }}">
+  {% for p in pages %}
+    {% if p.section %}
+      {% if current_section != p.section %}
+        {% if current_section %}
+            </ul>
+          </li>
+        {% endif %}
+
+        {% assign sec_active = false %}
+        {% if page.section == p.section %}{% assign sec_active = true %}{% endif %}
+        <li class="dropdown {% if sec_active %}active{% endif %}">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ p.section }} <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+        {% assign current_section = p.section %}
+      {% endif %}
+    {% else %}
+      {% if current_section %}
+          </ul>
+        </li>
+        {% assign current_section = p.section %}
+      {% endif %}
+    {% endif %}
+
+    {% assign active = false %}
+    {% if p.url == page.url %}{% assign active = true %}{% endif %}
+    {% if p.url == "/" and page.layout == "post" %}{% assign active = true %}{% endif %}
+
+    <li {% if active %}class="active"{% endif %}>
+      <a href="{{ p.url }}">
+        {{ p.title }}
+      </a>
+    </li>
+  {% endfor %}
+
+  {% if current_section %}
+      </ul>
+    </li>
+  {% endif %}
+</ul>

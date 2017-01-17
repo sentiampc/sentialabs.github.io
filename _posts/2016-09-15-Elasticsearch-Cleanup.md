@@ -1,6 +1,7 @@
 ---
 layout: post
-title: Cleanup ElasticSearch indexes
+title: Cleanup ElasticSearch Indexes
+banner: https://static-www.elastic.co/assets/blt6050efb80ceabd47/elastic-logo%20(2).svg?q=200
 author: Sander van de Graaf
 email: sander.van.de.graaf@sentia.com
 ---
