@@ -7,7 +7,7 @@ belongs_to: locksmith.md
 email: thomas.de.ruiter@sentia.com
 ---
 
-At SENITA we manage many AWS accounts, and for this we quite often need to
+At SENTIA we manage many AWS accounts, and for this we quite often need to
 login to the AWS Console of these accounts. We wanted a way to access the AWS
 Console that was both secure, and easy to use. 
 
