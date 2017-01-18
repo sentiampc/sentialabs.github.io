@@ -34,7 +34,7 @@ console:
     A person leaving the team requires only one IAM user to be deleted.
     Requires a single MFA token per user.
 
-<div markdown="1" class="feature-last-column">
+<div markdown="1" class="table-responsive feature-last-column">
 
 |                       | Shared<br/>Root   | IAM<br/>Users | IAM<br/>Roles | IAM Roles<br/>&<br/>Locksmith |
 | --------------------: | :----: | :-------: | :-------: | :-------------------: |
