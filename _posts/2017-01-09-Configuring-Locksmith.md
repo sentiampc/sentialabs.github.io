@@ -2,8 +2,7 @@
 layout: post
 title: Configure Locksmith User
 banner: /assets/posts/2017-01-09-Configuring-Locksmith/user-review.png
-author: Thomas de Ruiter
-email: thomas.de.ruiter@sentia.com
+author: thomas
 belongs_to:
   - locksmith.md
 ---

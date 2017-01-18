@@ -1,0 +1,13 @@
+<li class="list-group-item">
+  <div class="row">
+    <div class="col-xs-4">
+      {% if include.person.gravatar %}
+        <img class="img-rounded" src="http://www.gravatar.com/avatar/{{include.person.gravatar}}?s=320" />
+      {% endif %}
+    </div>
+    <div class="col-xs-8">
+      <h4 class="panel-title">{{include.person.name}}</h4>
+      {{include.person.description |markdownify}}
+    </div>
+  </div>
+</li>

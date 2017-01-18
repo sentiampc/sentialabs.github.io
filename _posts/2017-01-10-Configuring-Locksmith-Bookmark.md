@@ -2,8 +2,7 @@
 layout: post
 title: Add Locksmith Bookmark
 banner: /assets/locksmith/bookmarks.png
-author: Thomas de Ruiter
-email: thomas.de.ruiter@sentia.com
+author: thomas
 belongs_to:
   - locksmith.md
 ---

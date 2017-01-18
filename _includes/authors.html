@@ -1,0 +1,16 @@
+{% assign authors = site.data.people |where_exp: "i", "page.author contains i.id" | sort: 'name' %}
+{% if authors.size > 0 %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        About the Author{% if authors.size > 1 %}s{% endif %}
+      </h3>
+    </div>
+
+    <ul class="list-group">
+      {% for author in authors %}
+        {% include person.html person=author %}
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
