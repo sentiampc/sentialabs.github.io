@@ -2,8 +2,7 @@
 layout: post
 title: Cleanup ElasticSearch Indexes
 banner: https://static-www.elastic.co/assets/blt6050efb80ceabd47/elastic-logo%20(2).svg?q=200
-author: Sander van de Graaf
-email: sander.van.de.graaf@sentia.com
+author: svdgraaf
 ---
 
 Sometimes, you just want to cleanup old ElasticSearch indexes, especially logstash indexes can become quite numerous.

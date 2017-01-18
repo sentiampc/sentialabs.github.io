@@ -3,8 +3,7 @@ layout: post
 title: Serverless Screenshot service with Lambda
 banner: https://github.com/svdgraaf/serverless-screenshot/raw/master/docs/architecture.png
 github: svdgraaf/serverless-screenshot
-author: Sander van de Graaf
-email: sander.van.de.graaf@sentia.com
+author: svdgraaf
 ---
 
 Recently a client requested a feature which involved screenshots of random urls. Now, there are several services out there which will do this for you.

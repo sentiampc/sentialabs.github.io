@@ -2,9 +2,8 @@
 layout: post
 title: Introducing Locksmith
 banner: /assets/posts/2016-09-23-Introducing-Locksmith/locksmith-screenshot.png
-author: Thomas de Ruiter
+author: thomas
 belongs_to: locksmith.md
-email: thomas.de.ruiter@sentia.com
 ---
 
 At SENTIA we manage many AWS accounts, and for this we quite often need to

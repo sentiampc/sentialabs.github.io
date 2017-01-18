@@ -1,0 +1,15 @@
+---
+- id: svdgraaf
+  name: Sander van de Graaf
+  email: sander.van.de.graaf@sentia.com
+  gravatar: 31cf9383762e6c76d6b4614c18763c23
+  description: |
+    Cloud Systems Engineer during daytime,
+    [Dr. Bendoo](https://www.youtube.com/user/BendooBox) at night
+- id: thomas
+  name: Thomas de Ruiter
+  email: thomas.de.ruiter@sentia.com
+  gravatar: e875dc384711f3371f70b2808c4531bc
+  description: |
+    Cloud Systems Engineer and Security Officer for the
+    Public Clouds Team

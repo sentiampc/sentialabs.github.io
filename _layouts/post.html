@@ -8,16 +8,8 @@
     <div class="col-md-8" id="post">
       {{content}}
     </div>
-    <div id="author" class="col-md-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">{{page.author}}</h3>
-        </div>
-        <div class="panel-body">
-          <img class="img-rounded" src="{{page.email | to_gravatar}}?s=320" />
-        </div>
-      </div>
-
+    <div class="col-md-4">
+      {% include authors.html %}
       {% include resources.html %}
 
       {% if parents.size > 0 %}
