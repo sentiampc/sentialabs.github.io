@@ -6,9 +6,9 @@ author: thomas
 belongs_to: locksmith.md
 ---
 
-At SENTIA we manage many AWS accounts, and for this we quite often need to
+At SENTIA we manage many AWS accounts and for this we quite often need to
 login to the AWS Console of these accounts. We wanted a way to access the AWS
-Console that was both secure, and easy to use. 
+Console that was both secure and easy to use.
 
 
 ## Options for AWS Console Authentication
@@ -18,17 +18,17 @@ console:
 
   * **Shared root credentials:**
     Using a system like 1Password or LastPass the root credentials of all AWS accounts could be shared.
-    This means that everybody has full privileges within all accounts.
+    This means that everybody has full privileges within all AWS accounts.
     A person leaving the team requires all credentials to be rotated.
-    Requires one MFA token per account.
+    Requires one MFA token per AWS account.
   * **Personal IAM Users:**
-    Each person could have its own IAM user in every account.
+    Each person could have its own IAM user in every AWS account.
     User actions can be audited.
     IAM policies can be used to finetune user privileges.
-    A person leaving the team requires all his/hers IAM users to be deleted.
-    Requires one MFA token per user per account.
+    A person leaving the team requires all its IAM users to be deleted.
+    Requires one MFA token per user per AWS account.
   * **Personal IAM Roles:**
-    Each person could have its own IAM role in every account, using a single IAM user to assume this role.
+    Each person could have its own IAM role in every AWS account, using a single IAM user to assume this role.
     User actions can be audited.
     IAM policies can be used to finetune user privileges.
     A person leaving the team requires only one IAM user to be deleted.
@@ -58,19 +58,19 @@ Locksmith – a Chrome Extension for AWS Console login using
 Cross-Account IAM Roles – was created.
 
 
-## How does Locksmith look?
+## What does it look like?
 
 ![](/assets/posts/2016-09-23-Introducing-Locksmith/locksmith-screenshot.png)
 
-## How does this work under the hood? 
+## How does it work under the hood? 
 
 We use a single IAM user per person. This user has a single MFA, and you can
-easily remove the IAM user to revoke a person access to all accounts. 
+easily remove the IAM user to revoke a person's access to all accounts.
 
   * [Assume a role][api-sts-assume-role] using the user's personal IAM User credentials
-  * [Obtain a a signin token][federation-service] from the AWS Federation service
-  * Construct a signin URL
-  * Open the signin URL in the webbrowser
+  * [Obtain a a sign-in token][federation-service] from the AWS Federation service
+  * Construct a sign-in URL
+  * Open the sign-in URL in the webbrowser
 
 ## But, wait a minute...
 ...doesn't the AWS Console support this [already][x-account-console]?
