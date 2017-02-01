@@ -15,7 +15,7 @@
       {% if parents.size > 0 %}
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">Related to this Post</h3>
+          <h3 class="panel-title">Related Project{% if parents.size > 1 %}s{% endif %}</h3>
         </div>
         <div class="list-group">
           {% for post in parents %}
@@ -27,7 +27,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">Other Posts</h3>
+          <h3 class="panel-title">Random Posts</h3>
         </div>
         <div class="list-group">
           {% for post in site.posts %}
