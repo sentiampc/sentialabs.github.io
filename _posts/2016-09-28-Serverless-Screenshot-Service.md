@@ -48,9 +48,9 @@ For this project, we're going to need to setup:
 
 Getting Started
 ===============
-This is my first project in NodeJS, so bear with me (I'm more of a Python guy), any tips or PR's are greatly appreciated 😄
+This is my first project in NodeJS, so bear with me (I'm more of a Python guy), any tips or PRs are greatly appreciated 😄
 
-When you download the project, you can just run a `npm install`, to get all the requirements installed, and get going. If you want to follow along from scratch, read on. Be sure to install the latest Serverless version (`npm install -g serverless`).
+When you download the project, you can just run an `npm install`, to get all the requirements installed, and get going. If you want to follow along from scratch, read on. Be sure to install the latest Serverless version (`npm install -g serverless`).
 
 We start the project by creating a new project (in the current directory):
 
@@ -145,7 +145,7 @@ functions:
 
 Custom Resources
 ----------------
-We also need a CloudFront distribution to serve our screenshots. This is not supported by Serverless out of the box, so we need to create a custom resource for it. We also define some `Output`'s, so we can use these later on.
+We also need a CloudFront distribution to serve our screenshots. This is not supported by Serverless out of the box, so we need to create a custom resource for it. We also define some `Output`s, so we can use these later on.
 
 ```yaml
 resources:
@@ -248,7 +248,7 @@ As we configured our api's to use api keys, you need to provide a valid api key 
 
 Creating a screenshot
 ---------------------
-To create a screenshot for `google.com`:
+To create a screenshot of `google.com`:
 
 ```bash
 $ curl -X POST https://123g1jc802.execute-api.us-east-1.amazonaws.com/dev/screenshots?url=http://google.com/ -H "x-api-key: [yourkey]"
@@ -292,8 +292,8 @@ So creating at least 100.000 screenshots **per month**, with 15 thumbnails per s
 
 Conclusion
 ==========
-Taking screenshots is something which is perfectly fine to do with Lambda. There is no need to setup queuing, batch workers, etc. Lambda can handle the screenshots, thumbnails and storage. Whenever a request comes in, it will automatically spin up, auto scaling to whatever is your need.
-Serverless makes it really easy to setup, configure and deploy your (micro)services, and now that it's using CloudFormation, it's really easy to extend your services with other AWS services you might need in your project.
+Taking screenshots is something that is perfectly fine to do with Lambda. There is no need to setup queuing, batch workers, etc. Lambda can handle the screenshots, thumbnails and storage. Whenever a request comes in, it will automatically spin up, auto scaling to whatever is your need.
+Serverless makes it really easy to setup, configure, and deploy your (micro)services, and now that it's using CloudFormation, it's really easy to extend your services with other AWS services you might need in your project.
 
 [![Launch Awesomeness](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=serverless-screenshot-service&templateURL=https://s3-eu-west-1.amazonaws.com/serverless-screenshots-service/2016-09-23T12%3A50%3A03/template.yml)
 

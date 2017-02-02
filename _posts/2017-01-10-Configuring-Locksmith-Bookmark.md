@@ -17,25 +17,26 @@ Second, add a bookmark to Locksmith.
 
 ## Create an IAM Role
 
-[Create an IAM Role](createRole):
+In the AWS console, [create a new IAM Role](createRole):
 
 * Choose a role name, for example the email address of the user
-* "Role for Cross-Account Access"
-* "Provide access between AWS accounts you own", "Select"
+* Click "Role for Cross-Account Access"
+* In "Provide access between AWS accounts you own", click "Select"
 * Enter the AccountID of the account in which the IAM User for Locksmith was
   [created](/2017/01/09/Configuring-Locksmith.html)
 * Make sure "Require MFA" is **checked**!
-* "Next Step"
+* Click "Next Step"
 * Select the Policy you wish the user to be able to use
   
   _It is good practice to give the minimum required set of privileges._
-  If you must provide almost all privileges, please consider using
+
+  If you _must_ provide almost all privileges, please consider using
   "PowerUserAccess" (allows evertything, except IAM user management) over
   "AdministratorAccess" (allows everything).
 
 * Please make a note of the "Role ARN", this is a string like
   `arn:aws:iam::012345543210:role/foo@bar.baz`
-* "Create Role", don't forget this step!
+* Click "Create Role", don't forget this step!
 
 ## Add a Bookmark
 
@@ -59,7 +60,7 @@ Second, add a bookmark to Locksmith.
       email address
     * When you provide an URL (a string starting with `http`) it will use
       that URL as avatar
-* "Save Bookmark"
+* Click "Save Bookmark"
 
 ## Finally
 
