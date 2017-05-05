@@ -1,4 +1,4 @@
-{% if page.github or page.chrome_web_store %}
+{% if page.github or page.chrome_web_store or page.references.size > 0 %}
   <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">Resources</h3>
@@ -19,6 +19,11 @@
           />
           Chrome Web Store
         </a>
+      {% endif %}
+      {% if page.references.size > 0 %}
+        {% for reference in page.references %}
+          <a class="list-group-item" href="{{ reference.url }}">{{ reference.title }}</a></li>
+        {% endfor %}
       {% endif %}
     </div>
   </div>

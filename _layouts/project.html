@@ -9,17 +9,19 @@
     <div class="col-md-4 col-sm-4">
       {% include resources.html %}
 
+      {% assign related = site.posts |where_exp: "i", "i.belongs_to contains page.path" |sort: "date" %}
+      {% if related.size > 0 %}
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Publications</h3>
         </div>
         <div class="list-group">
-          {% assign related = site.posts |where_exp: "i", "i.belongs_to contains page.path" |sort: "date" %}
           {% for post in related %}
             <a class="list-group-item" href="{{ post.url }}">{{ post.title }}</a></li>
           {% endfor %}
         </div>
       </div><!-- panel -->
+      {% endif %}
 
 
     </div><!-- col-md-4 -->
