@@ -5,9 +5,11 @@ banner: /assets/posts/2017-05-09-Github-CodeBuild-Integration/aws-codebuild.png
 author: svdgraaf
 ---
 
-As you might know, it's currently not possible to use an AWS CodePipeline for multiple branches. So if you want to run integration tests whenever you create a branch/PR on your repository. You're pretty much forced to use some other external service like Bitbucket Pipelines, Hound or what have you. But you don't have to anymore!
+As you might know, AWS CodeBuild is a service by AWS which can run your integration test or builds for you. It can be triggered by CodePipeline to deliver artifacts, and you can use CodeDeploy to deploy those artifacts to your servers.
 
-The nice thing about having your build run in CodeBuild, is that everyting is completely serverless. Everything also runs within your own AWS account, so you don't have to setup any additional billing, etc. On top of that, your AWS CodeBuild project builds are free for the first month (base on the free tier)!
+Unfortunately, it's currently not possible to connect CodeBuild directly to Github. Which is where this project comes in. This project creates an endpoint for your github repository webhook, which is called every time you create/update a Pull Request.
+
+The nice thing about having your builds run in AWS CodeBuild, is that everyting is completely serverless. Everything also runs within your own AWS account, so you don't have to setup any additional billing, etc. On top of that, your AWS CodeBuild project builds are free for the first month (based on the free tier)! And ofcourse you get IAM control out of the box.
 
 Quick launch 🚀
 ---------------
@@ -40,7 +42,7 @@ Use the steps below to launch the stack directly into your AWS account. You can 
 4. Note the endpoint for the trigger in the Stack Output, eg: `https://[id].execute-api.eu-west-1.amazonaws.com/trigger/trigger-build/`
 5. Add that endpoint as a webhook on your project repository: `https://github.com/[username]/[repo-name]/settings/hooks/new`
 
-   Be sure to to select __`Let me select individual events.`__ and then __`Pull request`__, so it's only triggered on PR updates. It will work if you forgot this step, it can possibly incur extra costs, because the lambda function will trigger each time.
+   Be sure to to select __`Let me select individual events.`__ and then __`Pull request`__, so it's only triggered on PR updates. It will work if you forgot this step, but it can incur extra costs, because the Lambda Function will trigger on any of the events.
 6. Create a Pull Request on your project, and see the magic be invoked 😎
 7. ...
 8. Profit!
