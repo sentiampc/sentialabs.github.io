@@ -148,7 +148,3 @@ img + em {
 #post .feature-last-column table tfoot tr:last-child td:last-child {
   background-color: #FFD098;
 }
-
-#index .item:nth-child(3n+1){
-  clear:left
-}
