@@ -2,6 +2,7 @@
 layout: post
 title: Github CodeBuild Integration
 banner: /assets/posts/2017-05-09-Github-CodeBuild-Integration/aws-codebuild.png
+github: svdgraaf/github-codebuild-webhook
 author: svdgraaf
 ---
 
@@ -10,6 +11,8 @@ As you might know, AWS CodeBuild is a service by AWS which can run your integrat
 Unfortunately, it's currently not possible to connect CodeBuild directly to Github. Which is where this project comes in. This project creates an endpoint for your github repository webhook, which is called every time you create/update a Pull Request.
 
 The nice thing about having your builds run in AWS CodeBuild, is that everyting is completely serverless. Everything also runs within your own AWS account, so you don't have to setup any additional billing, etc. On top of that, your AWS CodeBuild project builds are free for the first month (based on the free tier)! And ofcourse you get IAM control out of the box.
+
+You can find all the source code here: [https://github.com/svdgraaf/github-codebuild-webhook](https://github.com/svdgraaf/github-codebuild-webhook)
 
 Quick launch 🚀
 ---------------
@@ -21,7 +24,11 @@ Architecture
 ------------
 ![Flow](https://raw.githubusercontent.com/svdgraaf/github-codebuild-webhook/master/architecture.png)
 
-When you create a PR, a notification is send to the ApiGateway endpoint and a Lambda Step Function is triggered. This will trigger the start of an AWS CodeBuild project, and set a status of `pending` on your specific commit.
+How does this work?
+-------------------
+When you deploy the [CloudFormation template](https://s3-eu-west-1.amazonaws.com/github-webhook-artifacts-eu-west-1/serverless/github-webhook/trigger/1494342303416-2017-05-09T15%3A05%3A03.416Z/compiled-cloudformation-template.json), a couple of things happen. First, some arbitrairy resources are created (IAM roles, Loggroups, etc). The Lambda functions are created, then a Step Function is created which points to the Lambda functions. An ApiGateway is created which is connected to the Step Function. And lastly a Custom Resource is created, which calls another Lambda function, which installs the webhook on the repository that you configured.
+
+When you create a PR on your repository, a notification is send to the ApiGateway endpoint and the Lambda Step Function is triggered. This will trigger the start of your CodeBuild project, and sets a status of `pending` on your specific commit.
 
 While the build is running, the Lambda Step Function will check the status of your build every X seconds.
 
@@ -39,13 +46,9 @@ Use the steps below to launch the stack directly into your AWS account. You can 
 
 	(or use `sls deploy`).
 
-4. Note the endpoint for the trigger in the Stack Output, eg: `https://[id].execute-api.eu-west-1.amazonaws.com/trigger/trigger-build/`
-5. Add that endpoint as a webhook on your project repository: `https://github.com/[username]/[repo-name]/settings/hooks/new`
-
-   Be sure to to select __`Let me select individual events.`__ and then __`Pull request`__, so it's only triggered on PR updates. It will work if you forgot this step, but it can incur extra costs, because the Lambda Function will trigger on any of the events.
-6. Create a Pull Request on your project, and see the magic be invoked 😎
-7. ...
-8. Profit!
+4. Create a Pull Request on your project, and see the magic be invoked 😎
+5. ...
+6. Profit!
 
 Example video (nay, gif!)
 -------------------------
