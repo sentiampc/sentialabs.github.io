@@ -7,9 +7,21 @@
 </div>
 
 <div id="wrapper" class="container">
-  <div class="row" id="index">
+  <div class="row">
     {% for post in site.posts %}
-      <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 item">
+      {% if forloop.index0 > 0 %}
+        {% assign fix_class = "" %}
+        {% assign fix_lg = forloop.index0 |modulo: 4 %}
+        {% assign fix_md = forloop.index0 |modulo: 3 %}
+        {% assign fix_sm = forloop.index0 |modulo: 2 %}
+        {% if fix_lg == 0 %}{% assign fix_class = fix_class | append: " visible-lg-block" %}{% endif %}
+        {% if fix_md == 0 %}{% assign fix_class = fix_class | append: " visible-md-block" %}{% endif %}
+        {% if fix_sm == 0 %}{% assign fix_class = fix_class | append: " visible-sm-block" %}{% endif %}
+        {% if fix_class != "" %}
+        <div class="clearfix{{fix_class}}"></div>
+        {% endif %}
+      {% endif %}
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
         <div class="thumbnail">
           {% if post.banner %}
           <a href="{{ site.baseurl }}{{ post.url }}"><img src="{{post.banner}}" /></a>
