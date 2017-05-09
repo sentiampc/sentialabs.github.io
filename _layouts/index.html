@@ -7,12 +7,12 @@
 </div>
 
 <div id="wrapper" class="container">
-  <div class="row">
+  <div class="row" id="index">
     {% for post in site.posts %}
-      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+      <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 item">
         <div class="thumbnail">
           {% if post.banner %}
-          <img src="{{post.banner}}" />
+          <a href="{{ site.baseurl }}{{ post.url }}"><img src="{{post.banner}}" /></a>
           {% endif %}
           <div class="caption">
         <h2><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h2>
