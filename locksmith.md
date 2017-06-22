@@ -21,3 +21,13 @@ for one AWS account. This also means that you only need a single MFA (virtual)
 token, no matter how many accounts you manage!
 
 ![](/assets/locksmith/bookmarks.png)
+
+
+**Locksmith CLI allows you to easily assume roles in your terminal!**
+
+Locksmith CLI is a command-line version of Locksmith that allows you to easily
+obtain credentials for your accounts! It provides selection menu from
+which you can select one of your accounts, it will assume the IAM role and
+export the temporary credentials as environment variables in a new shell.
+
+![](/assets/locksmith/locksmith-cli.png)
