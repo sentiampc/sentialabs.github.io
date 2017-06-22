@@ -4,14 +4,14 @@
       <h3 class="panel-title">Resources</h3>
     </div>
     <div class="list-group">
-      {% if page.github %}
-        <a class="list-group-item" href="https://github.com/{{page.github}}">
+      {% for github in page.github %}
+        <a class="list-group-item" href="https://github.com/{{github}}">
           <img src="https://a248.e.akamai.net/assets.github.com/images/icons/emoji/octocat.png"
               height="24"
           />
-          GitHub
+          {{github}}
         </a>
-      {% endif %}
+      {% endfor %}
       {% if page.chrome_web_store %}
         <a class="list-group-item" href="https://chrome.google.com/webstore/detail/{{page.chrome_web_store}}">
           <img src="http://orig01.deviantart.net/d48e/f/2012/300/3/7/chrome_web_store_new_icon_by_brebenel_silviu-d5j4agq.png"

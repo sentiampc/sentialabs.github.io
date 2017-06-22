@@ -3,7 +3,9 @@ layout: project
 title: Locksmith
 section: Projects
 navigation_weight: 2
-github: sentialabs/locksmith
+github:
+  - sentialabs/locksmith
+  - sentialabs/locksmith-cli
 chrome_web_store: idahiicmmneinnceklagffdlmgdmdnhc
 ---
 
