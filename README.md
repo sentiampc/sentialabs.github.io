@@ -19,9 +19,9 @@ touch _posts/[date]-[title].md
 # Commit
 git add .
 git commit -am "New post!"
-# Push
-git push origin master
-# Reload website
+# Push and create PR
+# Merge to master
+# Refresh website
 # ...
 # Profit
 ```
