@@ -7,7 +7,7 @@ Currently, CloudFormation doesn't have support for the Parameter Store Secure St
 
 Fortunately there is a "nice" workaround, called [Custom Resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html). This works by creating a Lambda function, which creates whatever you want to create.
 This opens a whole can of worms though, you end up writing a lambda function, uploading it to s3, calling it from within CloudFormation, etc.
-And by doing so, now you have to maintain the file in S3, take care of the packaging, versioning and deploy process, while you JUST WANT THE D*MN THING TO WORK.
+And by doing so, now you have to maintain the file in S3, take care of the packaging, versioning and deploy process, while you JUST WANT THE DARN THING TO WORK.
 
 There is a somewhat nice solution for this though. Using a special notation, you can actually embed the source code for a Lambda function within your template.
 
