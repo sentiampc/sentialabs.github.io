@@ -1,11 +1,13 @@
 ---
 layout: post
-title: CloudFormation SSM Secure String (using an inline boto3 custom resource)
+title: Using SSM Secure Strings in CloudFormation
+banner: /assets/posts/2018-04-13-ssm-secure-string/banner.png
+author: svdgraaf
 ---
 
-Currently, CloudFormation doesn't have support for the Parameter Store Secure Strings, which is unfortunate. This is just a matter of time though, as AWS will probably announce support at some point in the future.
+Currently, CloudFormation doesn't have support for the Parameter Store Secure Strings, which is unfortunate. This is just a matter of time though, as AWS will probably announce support at some point in the future, rendering this post obsolete.
 
-Fortunately there is a "nice" workaround, called [Custom Resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html). This works by creating a Lambda function, which creates whatever you want to create.
+Fortunately there is a "nice" workaround to start using the Secure Strings, called [Custom Resources](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html). This works by creating a Lambda function, which creates whatever you want to create.
 This opens a whole can of worms though, you end up writing a lambda function, uploading it to s3, calling it from within CloudFormation, etc.
 And by doing so, now you have to maintain the file in S3, take care of the packaging, versioning and deploy process, while you JUST WANT THE DARN THING TO WORK.
 
