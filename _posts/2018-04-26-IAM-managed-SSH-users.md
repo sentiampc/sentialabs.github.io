@@ -14,21 +14,21 @@ At Sentia we've learned to treat our server instances as [cattle](http://cloudsc
 
 Managing users the old way
 --------------------------
-Most environments we build and maintain are based on Linux. In general, these systems have a limited amount of users; because of security and operability reasons, we do not often allow our customers to login to instances.
+Most environments we build and maintain are based on Linux. In general, these systems have a limited amount of users; because of security and operability reasons, we do not often allow our clients to login to instances.
 
-In the few cases where the customer needs and is allowed SSH access to his systems, user management is easy. In our AMI creation process, we define the username(s) the customer can use, add a user in our automated AMI creation procedure and include their public SSH key in the `authorized_keys` file.
+In the few cases where the client needs and is allowed SSH access to his systems, user management is easy. In our AMI creation process, we define the username(s) the client can use, add a user in our automated AMI creation procedure and include their public SSH key in the `authorized_keys` file.
 
 The AMI is launched (as cattle), and the user has access to them. In case we need to cycle the keys - about once a year - we build a new AMI and update the autoscaling group. Easy as pie.
 
 Dynamic users
 -------------
-Recently we've worked on a big data project for a financial institution. Without going into details, the situation required data scientists to test and modify scripts on an instance in an AWS environment. These scripts would execute large processes on an EMR cluster. Customer SSH access into this instance was a realistic and appropriate requirement.
+Recently we've worked on a big data project for a financial institution. Without going into details, the situation required data scientists to test and modify scripts on an instance in an AWS environment. These scripts would execute large processes on an EMR cluster. Client SSH access into this instance was a realistic and appropriate requirement.
 
 Security guidelines dictate that multiple users should have their own user accounts. This allows you to evict users without affecting others, track user activity and assign users specific folders, disks or databases. 
 
 With that, the requirements for the solution were determined. We were to create a system that:
 - Would allow us to create and remove users on the fly, on multiple instances simultaneously (think cattle)
-- Would allow us to do this without terminating or rebooting the instance (boot time of the instance is about 30 minutes)
+- Would allow us to do this without terminating or rebooting the instance
 - Allowed the instance to remain stateless (so the user management system had to be placed outside of the instance)
 
 IAM to the rescue
