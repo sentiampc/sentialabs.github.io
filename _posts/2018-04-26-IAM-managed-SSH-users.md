@@ -57,7 +57,7 @@ The real magic happens on the instances. Through an EC2 IAM role they are allowe
                 "iam:GetGroup"
             ],
             "Resource": [
-                "arn:aws:iam::111136746641:group/DataScientists"
+                "arn:aws:iam::123412341234:group/DataScientists"
             ],
             "Effect": "Allow"
         },
