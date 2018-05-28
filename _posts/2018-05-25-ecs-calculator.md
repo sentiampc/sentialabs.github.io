@@ -1,4 +1,11 @@
-
+---
+layout: post
+title: ECS-calculator
+banner: /assets/posts/2018-05-25-ecs-calculator/ecs-banner.png
+author:
+  - veranikaisakova
+  - 
+---
   |Instance Type| CPU| RAM|
   |-------------|----|----|
   |t2.micro| 1024| 993|
@@ -64,3 +71,5 @@
   |d2.2xlarge| 8192| 61408|
   |d2.4xlarge| 16384| 122881|
   |d2.8xlarge| 36864| 245857|
+
+  You can also find this information in yaml format [here](/assets/files/2018-05-25-ecs-calculator/ec2-instance-list.yml)
