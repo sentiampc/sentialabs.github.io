@@ -4,8 +4,13 @@ title: ECS-calculator
 banner: /assets/posts/2018-05-25-ecs-calculator/ecs-banner.png
 author:
   - veranikaisakova
-  - 
+  - hadoan
 ---
+
+The ECS Instance Type calculator provides the necessary data of the CPU and Memory reservation of each divided ECS container upon the chosen EC2 instance type. Such data is required for optimal scaling and fitting of the ECS containers.
+
+First of all, the CPU and Memory values corresponding to each EC2 instance type are given below.
+
   |Instance Type| CPU| RAM|
   |-------------|----|----|
   |t2.micro| 1024| 993|
