@@ -7,9 +7,9 @@ author:
   - hadoan
 ---
 
-The ECS Instance Type calculator provides the necessary data of the CPU and Memory reservation of each divided ECS container upon the chosen EC2 instance type. Such data is required for optimal scaling and fitting of the ECS containers.
+In the cloud, containers provide a containerised environment enabling your code to be built, shipped and run anywhere. This can be simply done by just running your code without the setting up of your operating system. Coming with such benefit, AWS Elastic Container Services (ECS) is a a highly scalable, fast, container management service that makes easy to run your containerised code and applications across a managed cluster of EC2 instances. You will need to optimally scale and fit ECS containers in an EC2 instance for the sake of efficient usage of your resources on cloud. This means that the CPU and memory capacity of the EC2 instance should be used up to be distributed over the possible maximum number of containers that can fit in the EC2 instance. Therefore, the EC2 Calculator project is developed to provide a quick access to data of the CPU and memory reservation for each EC2 instance type and their values divided into containers.
 
-First of all, the CPU and Memory values corresponding to each EC2 instance type are given below.
+The CPU and memory values per EC2 instance type are given as below.
 
   |Instance Type| CPU| RAM|
   |-------------|----|----|
@@ -76,5 +76,7 @@ First of all, the CPU and Memory values corresponding to each EC2 instance type 
   |d2.2xlarge| 8192| 61408|
   |d2.4xlarge| 16384| 122881|
   |d2.8xlarge| 36864| 245857|
+  
+  Here is an example of how the data can help you to optimally scale and fit ECS containers in an EC2 instance. For some task, you need a configuration of 332 memory units. If you would choose t2.micro as the EC2 instance type which offers 993 memory units, you can still fit two containers in the instance because 993/332 = 2,99 containers. However, if you choose t2.small which offers 2001 memory units, the memory resource would be more efficiently used because 20001/332 = 6,02 containers and not using the leftover 0.99 containers would be more wasteful than doing this with the leftover 0.02 containers. 
 
   You can also find this information in yaml format [here](/assets/files/2018-05-25-ecs-calculator/ec2-instance-list.yml)
