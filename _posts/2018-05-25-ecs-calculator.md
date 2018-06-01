@@ -77,6 +77,6 @@ The CPU and memory values per EC2 instance type are given as below.
   |d2.4xlarge| 16384| 122881|
   |d2.8xlarge| 36864| 245857|
   
-  Here is an example of how the data can help you to optimally scale and fit ECS containers in an EC2 instance. For some task, you need a configuration of 332 memory units. If you would choose t2.micro as the EC2 instance type which offers 993 memory units, you can still fit two containers in the instance because 993/332 = 2,99 containers. However, if you choose t2.small which offers 2001 memory units, the memory resource would be more efficiently used because 20001/332 = 6,02 containers and not using the leftover 0.99 containers would be more wasteful than doing this with the leftover 0.02 containers. 
+  Here is an example of how the data can help you to optimally scale and fit ECS containers in an EC2 instance. For some task, you need a configuration of 332 memory units. If you choose t2.micro as the EC2 instance type which offers 993 memory units, you can fit two containers in the instance because 993/332 = 2,99 containers. However, if you choose t2.small which offers 2001 memory units, the memory resource would be more efficiently used because 2001/332 = 6,02 containers and not using the leftover 0.02 containers would be less wasteful than doing this with the leftover 0.99 containers.
 
   You can also find this information in yaml format [here](/assets/files/2018-05-25-ecs-calculator/ec2-instance-list.yml)
