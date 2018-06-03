@@ -153,3 +153,11 @@ img + em {
   table-layout: fixed;
   width: 500px;
 }
+
+#post .ec2-table table td:first-child {
+  background-color: #FFEFD5;
+}
+
+#post .ec2-table table th:first-child {
+  background-color: #FFA07A;
+}
