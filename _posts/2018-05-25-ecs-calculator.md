@@ -9,9 +9,7 @@ author:
 
 In the cloud, containers provide a containerised environment enabling your code to be built, shipped and run anywhere. This can be simply done by just running your code without setting up your operating system.
 
-Coming with such benefit, AWS Elastic Container Services (ECS) is a a highly scalable, fast, container management service that makes easy to run your containerised code and applications across a managed cluster of EC2 instances. You will need to optimally scale and fit ECS containers in an EC2 instance for the efficient usage of your resources in cloud. This means that the CPU and memory capacity of the EC2 instance should be used up to be distributed over the possible maximum number of containers that can fit in the EC2 instance. Therefore, the ECS Calculator project is developed to provide a quick access to data of the CPU and memory reservation for each EC2 instance type and their values divided into containers.
-
-The CPU and memory values per EC2 instance type are given as below.
+Coming with such benefit, AWS Elastic Container Services (ECS) is a a highly scalable, fast, container management service that makes easy to run your containerised code and applications across a managed cluster of EC2 instances. You will need to optimally scale and fit ECS containers in an EC2 instance for the efficient usage of your resources in cloud. This means that the CPU and memory capacity of the EC2 instance should be used up to be distributed over the possible maximum number of containers that can fit in the EC2 instance. You can have a quick access to data of the CPU and memory reservation for each EC2 instance type using the table with all information below.
 
   <div markdown="1" class="table-responsive ec2-table">
 
