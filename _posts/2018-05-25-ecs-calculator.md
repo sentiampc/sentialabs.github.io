@@ -1,6 +1,6 @@
 ---
 layout: post
-title: How to be more cost effective while using the containers?
+title: Cost efficiency while using the containers
 banner: /assets/posts/2018-05-25-ecs-calculator/ecs-banner.png
 author:
   - veranikaisakova
