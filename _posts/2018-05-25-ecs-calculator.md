@@ -96,10 +96,13 @@ You can also find this information in yaml format [here](/assets/files/2018-05-2
 
 ## How the data can help you to optimally scale and fit ECS containers in an EC2 instance?
 
-Containers are always guaranteed to get at least their budgeted CPU when they need it. A neat thing about CPU units is that a container can burst above its allocated units if no other containers are taking up the resource. **For instance**, if you have two tasks running on a `t2.medium`, each with 1024 budgeted CPU units, each task could individually burst up to 2048 given that the other task was completely idle. When you start sharing hosts this way, you can really squeeze the cost savings out of using ECS.
 
-Additionally, if all of the CPU units are not budgeted out, ECS will automatically divvy up the remaining CPU units to each container at the ratio of their budgeted CPU units. So if you have two tasks running on a `t2.medium` each with 0 CPU units, each container will effectively get 1024 CPU units since no other container has reserved them.
+The number of CPU units specifies the minimum amount of CPU reserved for a container. The CPU units are effectively allocated in containers on an EC2 instance. One container can burst above its allocated units if no other containers are taking up resources. **For instance**, if you have two tasks running on a `t2.medium`, each with 1024 CPU units budgeted for its respective container, one task could take up the whole 2048 CPU units given that the other task is inactive.
 
-One thing to note here is that memory works a bit differently - it is a hard limit. If the container ever tries to allocate more memory than it is budgeted, the task/container will exit. You can underprovision CPU units and usually get away with it (because containers can burst above their provision), but you need to make sure you stay within your Memory constraints.
+Besides, containers also share their unallocated CPU units with other containers on the instance with the same ratio as their allocated amount. **For example**, if you have two tasks running on a `t2.medium` each with 0 CPU units, each container of each task will effectively get 1024 CPU units since no other container has reserved them.
+
+In addition to such benefits of using ECS containers, the data given in the table above can give input to your choices of EC2 instance types or designing ECS containers on your instances.
+
+Whereas the CPU units can be reserved with soft limit because containers can burst above their provision, the Memory reservation has to stay within the allocated amount. 
 
 **For example**, you need a configuration of 332 memory units. If you choose `t2.micro` as the EC2 instance type which offers 993 memory units, you can fit 2 containers in the instance (993/332 = 2.99 containers). However, if you choose `t2.small` which offers 2001 memory units, the memory resource would be more efficiently used because 2001/332 = 6.02 containers and not using the leftover 0.02 containers would be less wasteful than doing this with the leftover 0.99 containers.
