@@ -93,13 +93,14 @@ The table below provides the values of the CPU and Memory reservation for each E
 
   </div>
 
-You can also find this information in yaml format [here](/assets/files/2018-05-25-ecs-calculator/ec2-instance-list.yml)
-
-## How the data can help you to optimally scale and fit ECS containers in an EC2 instance?
+❗️You can also find this information in yaml format [here](/assets/files/2018-05-25-ecs-calculator/ec2-instance-list.yml) 👈
 
 The solution is to make the optimal choice of the EC2 instance type with its budgeted CPU and Memory units to efficiently fit ECS containers in the instance based on the data from the table. Therefore, it is important to first have some insight into the limits of CPU and Memory reservation.
 The CPU units can be reserved with soft limit because containers can burst above their provision. One container can burst above its allocated units if no other containers are taking up resources. Besides, containers also share their unallocated CPU units with other containers on the instance with the same ratio as their allocated amount.
 Memory part is here!!!!!!
+=======
+How the data can help you to optimally scale and fit ECS containers in an EC2 instance?
+==========================================================================================
 
 Based on the soft constraint/hard constraint of CPU/Memory reservation, the approach of solving our current issue is taken according to the following steps.
 * Obtaining the number of the Memory units required for your largest container.
@@ -111,9 +112,7 @@ Calculate CPU units!!!
 In another scenario, your largest container is provided with 1750 memory units. You can fit 1 container in the `t2.small` instance which reserves 2001 Memory units (2001/1750 = 1.14 containers). Else, the `t2.medium` instance which reserves 3952 Memory units makes it possible for 2 containers to fit in (3952/1750 = 2.25 containers). Then your containers will fit more efficiently in the `t2.small` instance than in the `t2.medium` instance with the same argument from the previous example applied.
 Calculate CPU units!!!
 The examples above are indeed based on the important idea: available resources should be used up for the sake of the efficiency. Therefore, in case you have troublesome after some time to find an EC2 instance type in the table that suits your needs, there are two options being advised:
-* Providing more Memory units if available to your largest container so that your unused resources will be efficiently decreased.
+* Providing more Memory units if available to your largest container so that the portion of your unused resources will be efficiently decreased.
 * Using the `m4.large` instance for it overall reserves good amount of CPU/Memory units (2048/7984) for your containers and is used for general purposes.
-
-
 
 
