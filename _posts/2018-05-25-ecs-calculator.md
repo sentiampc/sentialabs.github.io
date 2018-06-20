@@ -9,7 +9,8 @@ author:
 
 In the cloud, containers provide a containerised environment enabling your code to be built, shipped and run anywhere. This can be simply done by just running your code without setting up your operating system.
 
-Coming with such benefit, AWS Elastic Container Services (ECS) is a a highly scalable, fast, container management service that makes easy to run your containerised code and applications across a managed cluster of EC2 instances. You will need to optimally scale and fit ECS containers in an EC2 instance for the efficient usage of your resources in cloud. This means that the CPU and memory capacity of the EC2 instance should be used up to be distributed over the possible maximum number of containers that can fit in the EC2 instance. You can have a quick access to data of the CPU and memory reservation for each EC2 instance type using the table with all information below.
+Coming with such benefit, AWS Elastic Container Services (ECS) is a a highly scalable, fast, container management service that makes easy to run your containerised code and applications across a managed cluster of EC2 instances. You will need to optimally scale and fit ECS containers in an EC2 instance for the efficient usage of your resources in the cloud. This means you should ensure that resources such as CPU and Memory units are enough and efficiently reserved for your largest container to scale out.
+The table below provides the values of the CPU and Memory reservation for each EC2 instance type as inputs to how to optimally fit ECS containers in an EC2 instance. Furthermore, how this is achieved will be explained in the latter examples.
 
   <div markdown="1" class="table-responsive ec2-table">
 
@@ -96,13 +97,23 @@ You can also find this information in yaml format [here](/assets/files/2018-05-2
 
 ## How the data can help you to optimally scale and fit ECS containers in an EC2 instance?
 
+The solution is to make the optimal choice of the EC2 instance type with its budgeted CPU and Memory units to efficiently fit ECS containers in the instance based on the data from the table. Therefore, it is important to first have some insight into the limits of CPU and Memory reservation.
+The CPU units can be reserved with soft limit because containers can burst above their provision. One container can burst above its allocated units if no other containers are taking up resources. Besides, containers also share their unallocated CPU units with other containers on the instance with the same ratio as their allocated amount.
+Memory part is here!!!!!!
 
-The number of CPU units specifies the minimum amount of CPU reserved for a container. The CPU units are effectively allocated in containers on an EC2 instance. One container can burst above its allocated units if no other containers are taking up resources. **For instance**, if you have two tasks running on a `t2.medium`, each with 1024 CPU units budgeted for its respective container, one task could take up the whole 2048 CPU units given that the other task is inactive.
+Based on the soft constraint/hard constraint of CPU/Memory reservation, the approach of solving our current issue is taken according to the following steps.
+* Obtaining the number of the Memory units required for your largest container.
+* Optimally choosing the EC2 instance type that can budget those Memory units.
+* Calculating CPU units needed for your largest container.
+The related example is given below.
+Assume that your largest container requires 332 memory units. If you choose `t2.micro` as the EC2 instance type which offers 993 memory units, you can fit 2 containers in the instance (993/332 = 2.99 containers). However, if you choose `t2.small` which offers 2001 memory units, the memory resource would be more efficiently used because 2001/332 = 6.02 containers and not using the leftover 0.02 containers would be less wasteful than doing this with the leftover 0.99 containers. In this way, your containers fit more efficiently in the `t2.small` instance than in the `t2.micro` instance.
+Calculate CPU units!!!
+In another scenario, your largest container is provided with 1750 memory units. You can fit 1 container in the `t2.small` instance which reserves 2001 Memory units (2001/1750 = 1.14 containers). Else, the `t2.medium` instance which reserves 3952 Memory units makes it possible for 2 containers to fit in (3952/1750 = 2.25 containers). Then your containers will fit more efficiently in the `t2.small` instance than in the `t2.medium` instance with the same argument from the previous example applied.
+Calculate CPU units!!!
+The examples above are indeed based on the important idea: available resources should be used up for the sake of the efficiency. Therefore, in case you have troublesome after some time to find an EC2 instance type in the table that suits your needs, there are two options being advised:
+* Providing more Memory units if available to your largest container so that your unused resources will be efficiently decreased.
+* Using the `m4.large` instance for it overall reserves good amount of CPU/Memory units (2048/7984) for your containers and is used for general purposes.
 
-Besides, containers also share their unallocated CPU units with other containers on the instance with the same ratio as their allocated amount. **For example**, if you have two tasks running on a `t2.medium` each with 0 CPU units, each container of each task will effectively get 1024 CPU units since no other container has reserved them.
 
-In addition to such benefits of using ECS containers, the data given in the table above can give input to your choices of EC2 instance types or designing ECS containers on your instances.
 
-Whereas the CPU units can be reserved with soft limit because containers can burst above their provision, the Memory reservation has to stay within the allocated amount. 
 
-**For example**, you need a configuration of 332 memory units. If you choose `t2.micro` as the EC2 instance type which offers 993 memory units, you can fit 2 containers in the instance (993/332 = 2.99 containers). However, if you choose `t2.small` which offers 2001 memory units, the memory resource would be more efficiently used because 2001/332 = 6.02 containers and not using the leftover 0.02 containers would be less wasteful than doing this with the leftover 0.99 containers.
