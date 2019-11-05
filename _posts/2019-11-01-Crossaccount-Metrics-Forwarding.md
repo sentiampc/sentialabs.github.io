@@ -110,23 +110,22 @@ def lambda_handler(event, context):
                     service_name = dimension['Value']
                     service_names.append(service_name)
 
+                    metric_data_input = fetch_json_cloudwatch(
+                        namespace='AWS/ECS',
+                        dimensions=[
+                            {
+                                'Name': 'ClusterName',
+                                'Value': cluster_name
+                            },
+                            {
+                                'Name': 'ServiceName',
+                                'Value': service_name
+                            }
+                        ],
+                        cloudwatch_client=source_cloudwatch_client,
+                        current_time=current_time
+                    )
                     for metric_name in metric_names:
-                        metric_data_input = fetch_json_cloudwatch(
-                            namespace='AWS/ECS',
-                            dimensions=[
-                                {
-                                    'Name': 'ClusterName',
-                                    'Value': cluster_name
-                                },
-                                {
-                                    'Name': 'ServiceName',
-                                    'Value': service_name
-                                }
-                            ],
-                            cloudwatch_client=source_cloudwatch_client,
-                            current_time=current_time
-                        )
-
                         metric_data_output = {
                             'MetricName': metric_name,
                             'Dimensions': [
