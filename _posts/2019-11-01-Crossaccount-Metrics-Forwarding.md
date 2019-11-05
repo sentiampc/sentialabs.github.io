@@ -150,43 +150,43 @@ def lambda_handler(event, context):
                             'Unit': 'Percent'
                         }
 
-                    for metric_name in metric_names:
-                        if metric_name == 'CPUUtilization':
-                            metric_data_cpu_output = metric_data_output
-                        else:
-                            metric_data_mem_output = metric_data_output
-
-                    resources = metric_data_input['MetricDataResults']        
-
-                    for resource in resources:
-                        label = resource['Label']
-                        value = resource['Values']
-                        label_components = label.split(' ')
-                        metric = label_components[0]
-                        stat = label_components[1]
-
-                        if metric == 'MemoryUtilization':
-                            if stat == 'Average':
-                                metric_data_mem_output['Values'] = resource['Values']
+                        for metric_name in metric_names:
+                            if metric_name == 'CPUUtilization':
+                                metric_data_cpu_output = metric_data_output
                             else:
-                                metric_data_mem_output['StatisticValues'][stat] = resource['Values'][0]
+                                metric_data_mem_output = metric_data_output
 
-                        if metric == 'CPUUtilization':
-                            if stat == 'Average':
-                                metric_data_cpu_output['Values'] = resource['Values']
-                            else:
-                                metric_data_cpu_output['StatisticValues'][stat] = resource['Values'][0]
+                        resources = metric_data_input['MetricDataResults']        
 
-                    metric_data_output = [
-                        metric_data_mem_output,
-                        metric_data_cpu_output
-                    ]
+                        for resource in resources:
+                            label = resource['Label']
+                            value = resource['Values']
+                            label_components = label.split(' ')
+                            metric = label_components[0]
+                            stat = label_components[1]
 
-                    ## publishing metrics in VAN IN:shared account
-                    dest_cloudwatch_client.put_metric_data(
-                        Namespace='AWS/ECS',
-                        MetricData=metric_data_output
-                    )
+                            if metric == 'MemoryUtilization':
+                                if stat == 'Average':
+                                    metric_data_mem_output['Values'] = resource['Values']
+                                else:
+                                    metric_data_mem_output['StatisticValues'][stat] = resource['Values'][0]
+
+                            if metric == 'CPUUtilization':
+                                if stat == 'Average':
+                                    metric_data_cpu_output['Values'] = resource['Values']
+                                else:
+                                    metric_data_cpu_output['StatisticValues'][stat] = resource['Values'][0]
+
+                        metric_data_output = [
+                            metric_data_mem_output,
+                            metric_data_cpu_output
+                        ]
+
+                        ## publishing metrics in VAN IN:shared account
+                        dest_cloudwatch_client.put_metric_data(
+                            Namespace='AWS/ECS',
+                            MetricData=metric_data_output
+                        )
 
 ```
 
