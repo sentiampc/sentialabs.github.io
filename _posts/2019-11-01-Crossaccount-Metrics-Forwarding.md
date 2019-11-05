@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Settingup Centralized Monitoring
+title: Cross-account Metrics Forwarding
 banner: /assets/posts/2018-04-13-ssm-secure-string/banner.png
 author: sanjeev ranjan
 ---
