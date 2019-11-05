@@ -7,7 +7,7 @@ author: sanjeev ranjan
 
 Currently, AWS doesn't support sharing/forwarding of cross-account metrics for ecs cluster. This is just a matter of time though, as AWS will probably announce support at some point in the future, rendering this post obsolete.
 
-Python script mentioned below can be used in destination(/centralized) account to fetch ECS metrics MemoryUtilization and CPUUtilization from source accounts i.e. Production, Acceptance and Test.
+Python script mentioned below can be used in destination(/shared) account to fetch ECS metrics MemoryUtilization and CPUUtilization from source accounts i.e. Production, Acceptance and Test. This script needs to be triggered every minute.
 
 ```python
 import json
@@ -190,6 +190,16 @@ def lambda_handler(event, context):
 
 ```
 
+This script takes as input role_arn:
+
+Role arn -
+It is arn of the role which is used to access CloudWatch metrics in source accounts.
+
+How does this script work?
+
+The script fetches cpu and memory data from different AWS accounts(source accounts). Using this data, It creates a CloudWatch metric in the namespace AWS/ECS with the same name as it was in original account.
+
+
 Functionality of code snippets of the lambda script has been described below.
 
 Snippet 1 -
@@ -234,7 +244,7 @@ def fetch_json_cloudwatch(
     )
     return res
 ```
-This is the function which is used to fetch CloudWatch metrics. It takes as input namespace, dimensions, cloudwatch_client, MetricName, current_time and stat.
+This is the function which is used to fetch CloudWatch metrics. It takes as input namespace, dimensions, cloudwatch_client, MetricName, current_time and stat. It fetches metrics from the time period in between 2 minute(StartTime) before and 1 minute before(EndTime) time of lambda trigger.
 
 a) Namespace - It is namespace of the CloudWatch metrics which is 'AWS/ECS' in this specific case.
 
@@ -248,7 +258,7 @@ e) cloudwatch_client - Boto3 client for CloudWatch which is used to fetch metric
 
 f) stat - The CloudWatch statistic to return.
 
-
+Snippet 2 -
 ```python
 role_arns = [
     'PROD_CROSSACCOUNT_TRANSFER_ROLE_ARN',
@@ -272,7 +282,7 @@ for role_arn in role_arns:
 
 This piece of code facilitate read access to CloudWatch metrics of different accounts(source) from which metrics needs to be forwarded. It is accomplished using different role arns for cross-account access. It loops over role arn of source accounts to create sessions.     
 
-
+Snippet 3 -
 ```python
 response = source_cloudwatch_client.list_metrics(
     Namespace='AWS/ECS',
@@ -287,6 +297,7 @@ response = source_cloudwatch_client.list_metrics(
 
 This piece of code is used to list the metrics related to ECS cluster. Metrics is filtered against namespace, metric name and dimensions.
 
+Snippet 4 -
 ```python
 service_names = []
 for metric in response['Metrics']:
@@ -305,7 +316,7 @@ for metric in response['Metrics']:
 
 This piece of code is used to derive name of cluster and services.
 
-
+Snippet 5 -
 ```python
 metric_data_input = fetch_json_cloudwatch(
     namespace='AWS/ECS',
@@ -326,7 +337,7 @@ metric_data_input = fetch_json_cloudwatch(
 
 This piece of code fetches metrics from source account for specified cluster and service name.  
 
-
+Snippet 6 -
 ```python
 metric_data_output = {
     'MetricName': metric_name,
@@ -355,7 +366,7 @@ metric_data_output = {
 
 This piece of code create a dictionary in the format which can be used as input for the API(put_metric_data) which will be used to send metrics to destination account.
 
-
+Snippet 7 -
 ```python
 resources = metric_data_input['MetricDataResults']
 
@@ -389,6 +400,7 @@ print(metric_data_output)
 
 This piece of code retrieve name of metric and statistics from the fetched metrics. These names are used to filter fetched metrics so that metric value of CPUUtilization and MemoryUtilization for different statistics is populated to corresponding dictionaries. Finally, both the dictionaries are used to create a list which can be as input for the put_metric_data API.
 
+Snippet 8 -
 ```python
 ## publishing metrics in VAN IN:shared account
          dest_cloudwatch_client.put_metric_data(
@@ -400,22 +412,8 @@ This piece of code retrieve name of metric and statistics from the fetched metri
 This piece of code starts default session of current(destination) account and then use put_metric_data API to put metric data in the CloudWatch metrics of current(/destination) account.
 
 
-Important points -
 
-a) In order to not miss any metric data, this lambda needs to be triggered at an interval which is equal to or less than the difference between EndTime and StartTime of GetMetricData API.
-
-b) In case of large number of metrics(ECS services), looping over different metrics may involve some time. In this case, we may need to tune start time and end time by increasing 'n'(n = 1, 2, 3, 4,....) in 'StartTime=(current_time - 120*n)' and 'EndTime=(current_time - 60*n)'.
-
-
-This script takes as input role_arn:
-
-Role arn -
-It is arn of the role which is used to access CloudWatch metrics in source accounts.
-
-How does this script work?
-
-The script fetches cpu and memory data from different AWS accounts(source accounts). Using this data, It creates a CloudWatch metric in the namespace AWS/ECS with the same name as it was in original account.
-
+NOTE - In order to not miss any metric data, this lambda needs to be triggered at an interval which is equal to or less than the difference between EndTime and StartTime of GetMetricData API.
 
 
 Conclusion
