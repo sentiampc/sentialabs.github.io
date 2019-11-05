@@ -243,7 +243,7 @@ def fetch_json_cloudwatch(
     )
     return res
 ```
-This is the function which is used to fetch CloudWatch metrics. It takes as input namespace, dimensions, cloudwatch_client, MetricName, current_time and stat. It fetches metrics from the time period between 2 minute(StartTime) before and 1 minute before(EndTime) the time of lambda trigger.
+This is the function which is used to fetch CloudWatch metrics. It fetches metrics from the time period between 2 minute(StartTime) before and 1 minute before(EndTime) the time of lambda trigger. Different parameters of the function is described below.
 
 a) Namespace - It is namespace of the CloudWatch metrics which is 'AWS/ECS' in this specific case.
 
@@ -253,7 +253,7 @@ c) MetricName - The name of the metric. In this case, It is CPUUtilization and M
 
 d) current_time - Current time in seconds.
 
-e) cloudwatch_client - Boto3 client for CloudWatch which is used to fetch metrics. It is the Cloudwatch client of the source account in our case.
+e) cloudwatch_client - Boto3 client for CloudWatch which is used to fetch metrics. It is the Cloudwatch client of the source account in this case.
 
 f) stat - The CloudWatch statistic to return.
 
