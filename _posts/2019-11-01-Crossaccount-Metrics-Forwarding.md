@@ -182,7 +182,6 @@ def lambda_handler(event, context):
                             metric_data_cpu_output
                         ]
 
-                        ## publishing metrics in VAN IN:shared account
                         dest_cloudwatch_client.put_metric_data(
                             Namespace='AWS/ECS',
                             MetricData=metric_data_output
