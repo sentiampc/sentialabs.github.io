@@ -110,83 +110,84 @@ def lambda_handler(event, context):
                     service_name = dimension['Value']
                     service_names.append(service_name)
 
-                metric_data_input = fetch_json_cloudwatch(
-                    namespace='AWS/ECS',
-                    dimensions=[
-                        {
-                            'Name': 'ClusterName',
-                            'Value': cluster_name
-                        },
-                        {
-                            'Name': 'ServiceName',
-                            'Value': service_name
+                    for metric_name in metric_names:
+                        metric_data_input = fetch_json_cloudwatch(
+                            namespace='AWS/ECS',
+                            dimensions=[
+                                {
+                                    'Name': 'ClusterName',
+                                    'Value': cluster_name
+                                },
+                                {
+                                    'Name': 'ServiceName',
+                                    'Value': service_name
+                                }
+                            ],
+                            cloudwatch_client=source_cloudwatch_client,
+                            current_time=current_time
+                        )
+
+                        metric_data_output = {
+                            'MetricName': metric_name,
+                            'Dimensions': [
+                                {
+                                    'Name': 'ClusterName',
+                                    'Value': cluster_name
+                                },
+                                {
+                                    'Name': 'ServiceName',
+                                    'Value': service_name
+                                }
+                            ],
+                            'Values': [],
+                            'StatisticValues': {
+                                'SampleCount': 1,
+                                'Sum': 0,
+                                'Minimum': 0,
+                                'Maximum': 0
+                            },
+
+                            'Timestamp': metric_data_input['MetricDataResults'][0]['Timestamps'][0],
+                            'Unit': 'Percent'
                         }
-                    ],
-                    cloudwatch_client=source_cloudwatch_client,
-                    current_time=current_time
-                )
 
-                metric_data_output = {
-                    'MetricName': metric_name,
-                    'Dimensions': [
-                        {
-                            'Name': 'ClusterName',
-                            'Value': cluster_name
-                        },
-                        {
-                            'Name': 'ServiceName',
-                            'Value': service_name
-                        }
-                    ],
-                    'Values': [],
-                    'StatisticValues': {
-                        'SampleCount': 1,
-                        'Sum': 0,
-                        'Minimum': 0,
-                        'Maximum': 0
-                    },
+                        for metric_name in metric_names:
+                            if metric_name == 'CPUUtilization':
+                                metric_data_cpu_output = metric_data_output
+                            else:
+                                metric_data_mem_output = metric_data_output
 
-                    'Timestamp': metric_data_input['MetricDataResults'][0]['Timestamps'][0],
-                    'Unit': 'Percent'
-                }
+                        resources = metric_data_input['MetricDataResults']        
 
-                for metric_name in metric_names:
-                    if metric_name == 'CPUUtilization':
-                        metric_data_cpu_output = metric_data_output
-                    else:
-                        metric_data_mem_output = metric_data_output
+                        for resource in resources:
+                            label = resource['Label']
+                            value = resource['Values']
+                            label_components = label.split(' ')
+                            metric = label_components[0]
+                            stat = label_components[1]
 
-                resources = metric_data_input['MetricDataResults']        
+                            if metric == 'MemoryUtilization':
+                                if stat == 'Average':
+                                    metric_data_mem_output['Values'] = resource['Values']
+                                else:
+                                    metric_data_mem_output['StatisticValues'][stat] = resource['Values'][0]
 
-                for resource in resources:
-                    label = resource['Label']
-                    value = resource['Values']
-                    label_components = label.split(' ')
-                    metric = label_components[0]
-                    stat = label_components[1]
+                            if metric == 'CPUUtilization':
+                                if stat == 'Average':
+                                    metric_data_cpu_output['Values'] = resource['Values']
+                                else:
+                                    metric_data_cpu_output['StatisticValues'][stat] = resource['Values'][0]
 
-                    if metric == 'MemoryUtilization':
-                        if stat == 'Average':
-                            metric_data_mem_output['Values'] = resource['Values']
-                        else:
-                            metric_data_mem_output['StatisticValues'][stat] = resource['Values'][0]
+                        metric_data_output = [
+                            metric_data_mem_output,
+                            metric_data_cpu_output
+                        ]
 
-                    if metric == 'CPUUtilization':
-                        if stat == 'Average':
-                            metric_data_cpu_output['Values'] = resource['Values']
-                        else:
-                            metric_data_cpu_output['StatisticValues'][stat] = resource['Values'][0]
-
-                metric_data_output = [
-                    metric_data_mem_output,
-                    metric_data_cpu_output
-                ]
-
-                ## publishing metrics in VAN IN:shared account
-                dest_cloudwatch_client.put_metric_data(
-                    Namespace='AWS/ECS',
-                    MetricData=metric_data_output
-                )
+                        ## publishing metrics in VAN IN:shared account
+                        dest_cloudwatch_client.put_metric_data(
+                            Namespace='AWS/ECS',
+                            MetricData=metric_data_output
+                        )
 
 ```
 
@@ -244,7 +245,7 @@ def fetch_json_cloudwatch(
     )
     return res
 ```
-This is the function which is used to fetch CloudWatch metrics. It takes as input namespace, dimensions, cloudwatch_client, MetricName, current_time and stat. It fetches metrics from the time period in between 2 minute(StartTime) before and 1 minute before(EndTime) time of lambda trigger.
+This is the function which is used to fetch CloudWatch metrics. It takes as input namespace, dimensions, cloudwatch_client, MetricName, current_time and stat. It fetches metrics from the time period between 2 minute(StartTime) before and 1 minute before(EndTime) the time of lambda trigger.
 
 a) Namespace - It is namespace of the CloudWatch metrics which is 'AWS/ECS' in this specific case.
 
