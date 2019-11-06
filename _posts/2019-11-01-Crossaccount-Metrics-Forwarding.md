@@ -7,7 +7,7 @@ author: sanjeev ranjan
 
 Currently, AWS doesn't support sharing/forwarding of cross-account metrics for ecs cluster. This is just a matter of time though, as AWS will probably announce support at some point in the future, rendering this post obsolete.
 
-Python script mentioned below can be used in destination(/shared) account to fetch ECS metrics MemoryUtilization and CPUUtilization from source accounts i.e. Production, Acceptance and Test. This script needs to be triggered every minute.
+Python script mentioned below can be used in destination(/shared) account to fetch ecs metrics MemoryUtilization and CPUUtilization from source accounts i.e. Production, Acceptance and Test. After some modification It can also be used for non-ecs metrics. This script needs to be triggered every minute.
 
 ```python
 import json
@@ -84,7 +84,7 @@ def lambda_handler(event, context):
         )
 
         source_cloudwatch_client = session.client('cloudwatch')
-        current_time = int(time.time())
+        current_time = int(int(time.time())/60) * 60
 
         response = source_cloudwatch_client.list_metrics(
             Namespace='AWS/ECS',
@@ -251,7 +251,7 @@ b) Dimensions - The dimension(/identity) for the metrics. In this case, It const
 
 c) MetricName - The name of the metric. In this case, It is CPUUtilization and MemoryUtilization.
 
-d) current_time - Current time in seconds.
+d) current_time - Current time approximated to closest minute.
 
 e) cloudwatch_client - Boto3 client for CloudWatch which is used to fetch metrics. It is the Cloudwatch client of the source account in this case.
 
