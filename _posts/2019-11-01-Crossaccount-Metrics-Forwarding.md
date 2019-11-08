@@ -7,7 +7,7 @@ author: sanjeev ranjan
 
 Currently, AWS doesn't support sharing/forwarding of cross-account metrics for ecs cluster. This is just a matter of time though, as AWS will probably announce support at some point in the future, rendering this post obsolete.
 
-Python script mentioned below can be used in destination(/shared) account to fetch ecs metrics MemoryUtilization and CPUUtilization from source accounts i.e. Production, Acceptance and Test. After some modification It can also be used for non-ecs metrics. This script needs to be triggered every minute.
+The python script mentioned below can be used in the destination(/shared) account to fetch ecs metrics related to MemoryUtilization and CPUUtilization from the source accounts i.e. Production, Acceptance and Test. After some modification it can also be used for non-ecs metrics. This script needs to be triggered every minute.
 
 ```python
 import json
@@ -196,7 +196,7 @@ It is arn of the role which is used to access CloudWatch metrics in source accou
 
 How does this script work?
 
-The script fetches cpu and memory data from different AWS accounts(source accounts). Using this data, It creates a CloudWatch metric in the namespace AWS/ECS with the same name as it was in original account.
+The script fetches cpu and memory data from different AWS accounts(source accounts). Using this data, It creates a CloudWatch metric in the namespace AWS/ECS with the same name as in the original account.
 
 
 Functionality of code snippets of the lambda script has been described below.
@@ -243,7 +243,8 @@ def fetch_json_cloudwatch(
     )
     return res
 ```
-This is the function which is used to fetch CloudWatch metrics. It fetches metrics from the time period between 2 minute(StartTime) before and 1 minute before(EndTime) the time of lambda trigger. Different parameters of the function is described below.
+This is the function which is used to fetch CloudWatch metrics. It fetches metrics from the time period between 2 minute(StartTime) before and 1 minute before(EndTime) the time of lambda trigger. The reason is that the most recent metrics(of the source account) can not be fetched as execution(/processing) of the code involve some time.
+Different parameters of the function is described below.
 
 a) Namespace - It is namespace of the CloudWatch metrics which is 'AWS/ECS' in this specific case.
 
@@ -279,7 +280,7 @@ for role_arn in role_arns:
     source_cloudwatch_client = session.client('cloudwatch')
 ```
 
-This piece of code facilitate read access to CloudWatch metrics of different accounts(source) from which metrics needs to be forwarded. It is accomplished using different role arns for cross-account access. It loops over role arn of source accounts to create sessions.     
+This piece of code facilitates read access to CloudWatch metrics in different accounts(source) from which metrics need to be forwarded. It is accomplished using different role arns for cross-account access. It loops over the role arns of the source accounts to create sessions.     
 
 Snippet 3 -
 ```python
@@ -397,7 +398,7 @@ metric_data_cpu_output
 print(metric_data_output)
 ```
 
-This piece of code retrieve name of metric and statistics from the fetched metrics. These names are used to filter fetched metrics so that metric value of CPUUtilization and MemoryUtilization for different statistics is populated to corresponding dictionaries. Finally, both the dictionaries are used to create a list which can be as input for the put_metric_data API.
+This piece of code retrieves the name of the metric and statistics from the fetched metrics. These names are used to filter fetched metrics so that the metric value of CPUUtilization and MemoryUtilization for different statistics is populated to corresponding dictionaries. Finally, both the dictionaries are used to create a list which can be as input for the put_metric_data API.
 
 Snippet 8 -
 ```python
@@ -408,7 +409,7 @@ Snippet 8 -
          )
 ```         
 
-This piece of code starts default session of current(destination) account and then use put_metric_data API to put metric data in the CloudWatch metrics of current(/destination) account.
+This piece of code starts default session of the current(destination) account and then uses the put_metric_data API to put metric data in the CloudWatch metrics of the current(/destination) account.
 
 
 
